@@ -954,7 +954,7 @@ the code to also :code:`#include <string.h>`. It sets:
   of the string to be copied and the underlying :code:`memcpy()`
   completed successfully, and :CODE:`FALSE` otherwise.
 
-:code:`YDB_FREE_BUFFER(BUFFERP)` - Use this macro to free the buffer malloced using :code:`YDB_MALLOC_BUFFER`.
+:code:`YDB_FREE_BUFFER(BUFFERP)` - Use this macro to free the buffer malloced using :code:`YDB_MALLOC_BUFFER()`.
 
 - `ydb_free() <https://docs.yottadb.com/MultiLangProgGuide/MultiLangProgGuide.html#ydb-free>`_ is used on :code:`BUFFERP->buf_addr`.
 
@@ -972,7 +972,7 @@ the code to also :code:`#include <string.h>`. It sets:
 :code:`msgnum` lies between :code:`YDB_MIN_YDBERR` and
 :code:`YDB_MAX_YDBERR`.
 
-:code:`YDB_MALLOC_BUFFER(BUFFERP,LEN)` - Use this macro to to allocate a buffer using :code:`ydb_malloc` 
+:code:`YDB_MALLOC_BUFFER(BUFFERP,LEN)` - Use this macro to to allocate a buffer using :code:`ydb_malloc()` 
 of length LEN and assign it to an already allocated :code:`ydb_buffer_t` structure.
 
 - :code:`BUFFERP->buf_addr` is set to the malloced buffer.
