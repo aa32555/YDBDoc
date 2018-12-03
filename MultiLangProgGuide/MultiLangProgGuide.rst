@@ -1905,9 +1905,9 @@ return YDB_OK if the two :code:`fileid` structures are the same file.
 .. _ydb_file_name_to_id():
 .. _ydb_file_name_to_id_t():
 
----------------------
-ydb_file_name_to_id()
----------------------
+-------------------------------------------------
+ydb_file_name_to_id() / ydb_file_name_to_id_t()
+-------------------------------------------------
 
 .. code-block:: C
 
@@ -1973,25 +1973,20 @@ In a multi-threaded environment, only the thread that executes
 child and is dumped.
 
 .. _ydb_free():
-.. _ydb_free_t():
 
 -------------------------
-ydb_free() / ydb_free_t()
+ydb_free() 
 -------------------------
 
 .. code-block:: C
 
 	void ydb_free(void *ptr)
 
-	void ydb_free_t(uint64_t tptoken, void *ptr)
-
-Releases memory previously allocated by `ydb_malloc()`_ or
-`ydb_malloc_t()`_. Passing :code:`ydb_free()` or
-:code:`ydb_free_t()` a pointer not previously provided to the
-application by `ydb_malloc()`_ or `ydb_malloc_t()`_ can result in
+Releases memory previously allocated by `ydb_malloc()`_. Passing :code:`ydb_free()` 
+a pointer not previously provided to the
+application by `ydb_malloc()`_ can result in
 unpredictable behavior. The signature of :code:`ydb_free()` matches
-that of the POSIX :code:`free()` call and that of :code:`ydb_free_t()`
-has the additional :code:`tptoken` parameter.
+that of the POSIX :code:`free()` call.
 
 .. _ydb_hiber_start():
 .. _ydb_hiber_start_t():
@@ -2063,17 +2058,14 @@ to be an application's first calls to YottaDB, they don't require a
 :code:`tptoken` parameter.
 
 .. _ydb_malloc():
-.. _ydb_malloc_t():
 
 -----------------------------
-ydb_malloc() / ydb_malloc_t()
+ydb_malloc()
 -----------------------------
 
 .. code-block:: C
 
 	void *ydb_malloc(size_t size)
-
-	void *ydb_malloc_t(uint64_t tptoken, size_t size)
 
 With a signature matching that of the POSIX :code:`malloc()` call,
 :code:`ydb_malloc()` returns an address to a block of memory of the
@@ -2085,8 +2077,6 @@ variable :code:`ydb_dbglvl` whose values are a mask as described in
 `gtmdbglvl.h
 <https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_port/gtmdbglvl.h>`_.
 
-:code:`ydb_malloc_t()` performs the same function as
-:code:`ydb_malloc()`, but for multi-threaded application.
 
 .. _ydb_message():
 .. _ydb_message_t():
@@ -2305,9 +2295,9 @@ environment and initialize it*) in the `Quick Start`_ section:
    instructions to include headers].  As a sample program, you can
    download the wordfreq.go program [XYZ – provide actual URL for
    wordfreq.go program when ready], with a `reference input file
-   <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/outref/wordfreq_input.txt>`_
+   <https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/outref/wordfreq_input.txt>`_
    and `corresponding reference output file
-   <https://raw.githubusercontent.com/YottaDB/YottaDBtest/master/simpleapi/outref/wordfreq_output.txt>`_.
+   <https://gitlab.com/YottaDB/DB/YDBTest/raw/master/simpleapi/outref/wordfreq_output.txt>`_.
    Compile it thus: [XYZ compilation instructions / command].
 
 #. Run your program and verify that the output matches the reference output. For example:
