@@ -2318,8 +2318,8 @@ Go Concepts
 
 As the YottaDB wrapper is distributed as a Go package, function calls
 to YottaDB are prefixed in Go code with :code:`yottadb.` (e.g.,
-application code to call the :code:`GetE()` function is written
-:code:`yottadb.GetE(…)`.
+application code to call the :code:`ValE()` function is written
+:code:`yottadb.ValE(…)`.
 
 ------------------
 Go Error Interface
@@ -2364,7 +2364,7 @@ A routine used to find the error return code is:
 .. code-block:: go
 
     func ErrorCode(err error) int {
-	yerr, ok := err.(*YDBError)
+	yerr, ok := err.(\*YDBError)
 	if ok {
 	    rc := yerr.errcode
 	    return rc
@@ -2376,7 +2376,7 @@ In the documentation:
 
 - Error codes specific to each function are noted. However, common
   errors can also be returned. For example, while the `Go BufferT
-  GetValStr()`_ method can return INVSTRLEN, it can also return errors
+  ValStr()`_ method can return INVSTRLEN, it can also return errors
   from the YottaDB engine, e.g., GVUNDEF.
 - An error name such as INVSTRLEN refers to the underlying error,
   whether application code references the numeric value or the string.
@@ -2479,15 +2479,15 @@ error, the function returns the error.
 As M and Go application code cannot be mixed in the same process, the
 warning in `ydb_delete_excl_s()`_ does not apply.
 
-Go GetE()
+Go ValE()
 ---------
 
 .. code-block:: go
 
-	func yottadb.GetE(tptoken uint64,
+	func yottadb.ValE(tptoken uint64,
 		varname string, subary []string) (string, error)
 
-Matching `Go GetST()`_, :code:`GetE()` wraps `ydb_get_st()`_ to return
+Matching `Go ValST()`_, :code:`ValE()` wraps `ydb_get_st()`_ to return
 the value at the referenced global or local variable node, or
 intrinsic special variable.
 
@@ -2635,16 +2635,16 @@ of a local or global variable tree.
   previous node; an empty string array if that previous node is the root.
 - If the node is the first in the tree, the function returns the NODEEND error.
 
-Go SetE()
+Go SetValE()
 ---------
 
 .. code-block:: go
 
-	func yottadb.SetE(tptoken uint64,
+	func yottadb.SetValE(tptoken uint64,
 		value, varname string, subary []string) error
 
-Matching `Go SetST()`_, at the referenced local or global variable
-node, or the intrinsic special variable, :code:`SetE()` wraps
+Matching `Go SetValST()`_, at the referenced local or global variable
+node, or the intrinsic special variable, :code:`SetValE()` wraps
 `ydb_set_st()`_ to set the value specified by :code:`value`.
 
 Go SubNextE()
@@ -2833,24 +2833,24 @@ YottaDB heap space referenced by the :code:`C.ydb_buffer_t` structure,
 release the :code:`C.ydb_buffer_t`, and set :code:`cbuft` in the
 :code:`BufferT` structure to :code:`nil`.
 
-Go BufferT GetLenAlloc()
+Go BufferT LenAlloc()
 ........................
 
 .. code-block:: go
 
-	func (buffer *BufferT) GetLenAlloc() (uint, error)
+	func (buffer *BufferT) LenAlloc() (uint, error)
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
 - Otherwise, return the :code:`len_alloc` field of the
   :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`.
 
-Go BufferT GetLenUsed()
+Go BufferT LenUsed()
 .......................
 
 .. code-block:: go
 
-	func (buffer *BufferT) GetLenUsed() (uint, error)
+	func (buffer *BufferT) LenUsed() (uint, error)
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -2862,12 +2862,12 @@ Go BufferT GetLenUsed()
 - Otherwise, return the :code:`len_used` field of the
   :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`.
 
-Go BufferT GetValBAry()
+Go BufferT ValBAry()
 .......................
 
 .. code-block:: go
 
-	func (buffer *BufferT) GetValBAry() (*[]byte, error)
+	func (buffer *BufferT) ValBAry() (*[]byte, error)
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -2877,12 +2877,12 @@ Go BufferT GetValBAry()
 - Otherwise, return :code:`len_used` bytes of the buffer as a byte
   array.
 
-Go BufferT GetValStr()
+Go BufferT ValStr()
 ......................
 
 .. code-block:: go
 
-	func (buffer *BufferT) GetValStr() (*string, error)
+	func (buffer *BufferT) ValStr() (*string, error)
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -2891,12 +2891,12 @@ Go BufferT GetValStr()
   INVSTRLEN error), return an INVSTRLEN error.
 - Otherwise, return :code:`len_used` bytes of the buffer as a string.
 
-Go BufferT SetLenUsed()
+Go BufferT SetElemLenUsed()
 .......................
 
 .. code-block:: go
 
-	func (buffer *BufferT) SetLenUsed(newLen uint) error
+	func (buffer *BufferT) SetElemLenUsed(newLen uint) error
 
 Use this method to change the length of a used substring of the
 contents of the buffer referenced by the :code:`buf_addr` field of the
@@ -3028,24 +3028,24 @@ The inverse of the :code:`Alloc()` method: release the :code:`numSubs`
 buffers and the :code:`C.ydb_buffer_t` array. Set :code:`cbuftary` to
 :code:`nil`, and :code:`elemsAlloc` and :code:`elemsUsed` to zero.
 
-Go BufferTArray GetAlloc()
+Go BufferTArray ElemAlloc()
 ..........................
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) GetAlloc() uint
+	func (buftary *BufferTArray) ElemAlloc() uint
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
   STRUCTNOTALLOCD error.
 - Otherwise, return the :code:`elemsAlloc` field.
 
-Go BufferTArray GetLenAlloc()
+Go BufferTArray ElemLenAlloc()
 .............................
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) GetLenAlloc() uint
+	func (buftary *BufferTArray) ElemLenAlloc() uint
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
@@ -3054,12 +3054,12 @@ Go BufferTArray GetLenAlloc()
   :code:`C.ydb_buffer_t` structures referenced by :code:`cbuftary`,
   all of which have the same value.
 
-Go BufferTArray GetLenUsed()
+Go BufferTArray ElemLenUsed()
 ............................
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) GetLenUsed(idx uint) (uint, error)
+	func (buftary *BufferTArray) ElemLenUsed(idx uint) (uint, error)
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
@@ -3071,24 +3071,24 @@ Go BufferTArray GetLenUsed()
   specifed by :code:`idx` of the :code:`C.ydb_buffer_t` array referenced
   by :code:`cbuftary`.
 
-Go BufferTArray GetUsed()
+Go BufferTArray ElemUsed()
 .........................
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) GetUsed() uint
+	func (buftary *BufferTArray) ElemUsed() uint
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
-  STRUCTNOTALLOCD error.
+  \STRUCTNOTALLOCD error.
 - Otherwise, return the value of the :code:`elemsUsed` field.
 
-Go BufferTArray GetValBAry()
+Go BufferTArray ValBAry()
 ............................
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) GetValBAry(idx uint) (*[]byte, error)
+	func (buftary *BufferTArray) ValBAry(idx uint) (*[]byte, error)
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
@@ -3103,12 +3103,12 @@ Go BufferTArray GetValBAry()
 - Otherwise, return a byte array containing the :code:`len_used` bytes
   at :code:`buf_addr`.
 
-Go BufferTArray GetValStr()
+Go BufferTArray ValStr()
 ...........................
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) GetValStr(idx uint) (*string, error)
+	func (buftary *BufferTArray) ValStr(idx uint) (*string, error)
 
 - If the :code:`C.ydb_buffer_t` structures referenced by
   :code:`cbuftary` have not yet been allocated, return the
@@ -3123,12 +3123,12 @@ Go BufferTArray GetValStr()
 - Otherwise, return a string containing the :code:`len_used` bytes at
   :code:`buf_addr`.
 
-Go BufferTArray SetLenUsed()
+Go BufferTArray SetElemLenUsed()
 ............................
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) SetLenUsed(idx, newLen uint) error
+	func (buftary *BufferTArray) SetElemLenUsed(idx, newLen uint) error
 
 Use this method to set the number of bytes in :code:`C.ydb_buffer_t`
 structure referenced by :code:`cbuft` of the array element specified
@@ -3152,12 +3152,12 @@ Note that even if :code:`newLen` is not greater than the value of
 number of meaningful bytes in the buffer will likely lead to
 hard-to-debug errors.
 
-Go BufferTArray SetUsed()
+Go BufferTArray SetElemUsed()
 .........................
 
 .. code-block:: go
 
-	func (buftary *BufferTArray) SetUsed(newUsed uint) error
+	func (buftary *BufferTArray) SetElemUsed(newUsed uint) error
 
 Use this method to set the current number of valid strings (subscripts
 or variable names) in the :code:`BufferTArray`.
@@ -3449,14 +3449,14 @@ node should be deleted, leaving the (sub)tree untouched, and a value
 of :code:`C.YDB_DEL_TREE` specifying that the node as well as the
 (sub)tree are to be deleted.
 
-Go GetST()
+Go ValST()
 ----------
 
 .. code-block:: go
 
-	func (key *KeyT) GetST(tptoken uint64, retval *BufferT) error
+	func (key *KeyT) ValST(tptoken uint64, retval *BufferT) error
 
-Matching `Go GetE()`_, :code:`GetST()` wraps `ydb_get_st()`_ to return
+Matching `Go ValE()`_, :code:`ValST()` wraps `ydb_get_st()`_ to return
 the value at the referenced global or local variable node, or
 intrinsic special variable, in the buffer referenced by the
 :code:`BufferT` structure referenced by :code:`retval`.
@@ -3598,15 +3598,15 @@ of a local or global variable tree.
 - If the node is the first in the tree, the method returns the NODEEND
   error making no changes to the structures below :code:`prev`.
 
-Go SetST()
+Go SetValST()
 ----------
 
 .. code-block:: go
 
-	func (key *KeyT) SetST(tptoken uint64, val *BufferT) error
+	func (key *KeyT) SetValST(tptoken uint64, val *BufferT) error
 
-Matching `Go SetE()`_, at the referenced local or global variable
-node, or the intrinsic special variable, :code:`SetST()` wraps
+Matching `Go SetValE()`_, at the referenced local or global variable
+node, or the intrinsic special variable, :code:`SetValST()` wraps
 `ydb_set_st()`_ to set the value specified by :code:`val`.
 
 Go SubNextST()
