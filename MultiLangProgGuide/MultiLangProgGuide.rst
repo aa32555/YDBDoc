@@ -380,7 +380,7 @@ to remote files is also performed using global directories, and is
 transparent to application code except that YottaDB client/server
 operation does not support `transaction processing`_.
 
-Furthermore, there are configurations that impliticly invoke
+Furthermore, there are configurations that implicitly invoke
 transaction processing logic, such as distributing a global variable
 over multiple database regions, or a trigger invocation (see `Chapter
 14 Triggers of the YottaDB M Programmers Guide
@@ -2318,8 +2318,8 @@ Go Concepts
 
 As the YottaDB wrapper is distributed as a Go package, function calls
 to YottaDB are prefixed in Go code with :code:`yottadb.` (e.g.,
-application code to call the :code:`GetET()` function is written
-:code:`yottadb.GetET(…)`.
+application code to call the :code:`GetE()` function is written
+:code:`yottadb.GetE(…)`.
 
 ------------------
 Go Error Interface
@@ -2937,7 +2937,7 @@ Go BufferT SetValStr()
 
 .. code-block:: go
 
-	func (buffer *BufferT) SetVarStr(val *string) error
+	func (buffer *BufferT) SetValStr(val *string) error
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
@@ -2954,7 +2954,7 @@ Go BufferT SetValStrLit()
 
 .. code-block:: go
 
-	func (buffer *BufferT) SetVarStrLit(val string) error
+	func (buffer *BufferT) SetValStrLit(val string) error
 
 - If the :code:`C.ydb_buffer_t` structure referenced by :code:`cbuft`
   has not yet been allocated, return the STRUCTNOTALLOCD error.
