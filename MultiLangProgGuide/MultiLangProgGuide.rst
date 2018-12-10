@@ -2009,7 +2009,7 @@ application by `ydb_malloc()`_ can result in
 unpredictable behavior. The signature of :code:`ydb_free()` matches
 that of the POSIX :code:`free()` call.
 
-Just like other SimpleAPI functions, :code:`ydb_free()` should not be used in
+Just like `other SimpleAPI functions`_, :code:`ydb_free()` should not be used in
 multiple threads in multi-threaded programs. However, the :CODE:`YDB_FREE_BUFFER` macro is safe
 to use in multiple threads.
 
@@ -2102,7 +2102,7 @@ variable :code:`ydb_dbglvl` whose values are a mask as described in
 `gtmdbglvl.h
 <https://gitlab.com/YottaDB/DB/YDB/blob/master/sr_port/gtmdbglvl.h>`_.
 
-Just like other SimpleAPI functions, :code:`ydb_malloc()` should not be used in
+Just like `other SimpleAPI functions`_, :code:`ydb_malloc()` should not be used in
 multiple threads in multi-threaded programs. However, the :CODE:`YDB_MALLOC_BUFFER` macro is safe
 to use in multiple threads.
 
@@ -4156,6 +4156,8 @@ There are two considerations when executing :code:`fork()`.
   that M code within a parent process may have executed :code:`write`
   commands which are still buffered when C code within the same
   process calls :code:`fork()`.
+
+.. _other SimpleAPI functions:
 
 Threads
 =======
