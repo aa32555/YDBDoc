@@ -4359,7 +4359,7 @@ Important Notes:
     error while attempting to report an error is likely to add
     confusion rather than enlightenment).
 
-    - :code:`len_used` is always set to the length of `$zstatus`_,
+    - :code:`errstr->len_used` is always set to the length of `$zstatus`_,
       whether or not it is truncated.
     - If :code:`errstr->len_used` is greater than
       :code:`errstr->len_alloc-1` it means `$zstatus`_ has been
