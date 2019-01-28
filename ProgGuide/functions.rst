@@ -968,6 +968,8 @@ $QUERY() can be used as a tool for scanning an entire array for nodes that have 
 
 Note that the standard does not unambiguously define the state of the naked reference indicator after a $QUERY(). While in YottaDB after $QUERY(), the naked reference indicator reflects the $QUERY() argument, NOT its result.
 
+If the total length of the subscripts specified to $QUERY() exceeds 1,048,576 , $QUERY() returns a `YDB-E-MAXSTRLEN <https://docs.yottadb.com/MessageRecovery/errors.html#maxstrlen>`_ error.
+
 +++++++++++++++++++++++++++
 Examples of $QUERY()
 +++++++++++++++++++++++++++
