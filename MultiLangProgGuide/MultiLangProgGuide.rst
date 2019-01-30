@@ -4261,8 +4261,8 @@ the API, it initializes signal handling as follows:
   these signals, it must either save YottaDB's handler, and drive
   it before process termination or call `ydb_exit()`_ prior to
   process exit. [#]_
-- An application's signal handler is saved during
-  initialization and is restored if :code:`ydb_exit()` is explicitly
+- YottaDB saves an application's signal handler during
+  initialization and restores it if :code:`ydb_exit()` is explicitly
   called prior to process exit. YottaDB does not reset existing signal handlers
   for signals it does not handle but calls the saved signal handler if the YottaDB handler returns (and doesn't exit).
 
