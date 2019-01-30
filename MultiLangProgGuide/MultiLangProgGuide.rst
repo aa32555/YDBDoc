@@ -4226,7 +4226,7 @@ the API, it initializes signal handling as follows:
   safe to suspend.
 - :code:`SIGCONT` - YottaDB sets a handler that continues a suspended
   process, and nothing if the process is not suspended.
-- :code:`SIGINT` – YottaDB installs a Ctrl-C handler for M. It is used if the top level invocation of the process is 
+- :code:`SIGINT` – YottaDB installs a Ctrl-C handler for M. It is used if the top level invocation of the process is
   the :code:`mumps` executable. If a previous handler existed, and a USE command is done during an
   application's call-in to M, the CENABLE and NOCENABLE modifiers are
   ignored. Ctrl-C is a fatal signal in call-in mode.
