@@ -4263,10 +4263,11 @@ the API, it initializes signal handling as follows:
   it before process termination or call `ydb_exit()`_ prior to
   process exit. [#]_
 - Handlers for all signals other than those mentioned above are set to
-  :code:`SIG_IGN`. If an application sets a signal hander for anther
-  signal, it *must* ensure that :code:`ydb_exit()` is explicitly
-  called prior to process exit. An application can set its own signal
-  handler after the first YottaDB API call.
+  :code:`SIG_IGN`. An application's signal handler is saved during
+  initialization and is restored if :code:`ydb_exit()` is explicitly
+  called prior to process exit. YottaDB does not reset existing signal handlers
+  of applications that it does not require, and uses the restored application
+  signal handler if the YottaDB handler returns (and doesn't exit).
 
 .. [#] Other YottaDB processes will attempt to automatically clean up
        after a process terminates abnormally. However, this is not
