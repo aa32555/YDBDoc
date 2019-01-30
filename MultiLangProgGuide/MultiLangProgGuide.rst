@@ -4230,7 +4230,9 @@ the API, it initializes signal handling as follows:
   :code:`mumps` executable, the handler is the YottaDB Ctrl-C handler
   for M. Otherwise, if the handler is :code:`SIG_DFL`, it is replaced
   by the YottaDB Ctrl-C handler for M, and if it is something else,
-  YottaDB does not change it.
+  YottaDB does not change it. If a USE command is done during an
+  application's call-in to M, the CENABLE and NOCENABLE modifiers are
+  ignored. Ctrl-C is a fatal signal in call-in mode.
 - :code:`SIGUSR1` – As YottaDB uses this signal to asynchronously
   execute the M code in the `$zinterrupt intrinsic special variable
   <https://docs.yottadb.com/ProgrammersGuide/isv.html#zinterrupt>`_,
@@ -4262,12 +4264,10 @@ the API, it initializes signal handling as follows:
   these signals, it must either save YottaDB's handler, and drive
   it before process termination or call `ydb_exit()`_ prior to
   process exit. [#]_
-- Handlers for all signals other than those mentioned above are set to
-  :code:`SIG_IGN`. An application's signal handler is saved during
+- An application's signal handler is saved during
   initialization and is restored if :code:`ydb_exit()` is explicitly
   called prior to process exit. YottaDB does not reset existing signal handlers
-  of applications that it does not require, and uses the restored application
-  signal handler if the YottaDB handler returns (and doesn't exit).
+  for signals it does not handle but calls the saved signal handler if the YottaDB handler returns (and doesn't exit).
 
 .. [#] Other YottaDB processes will attempt to automatically clean up
        after a process terminates abnormally. However, this is not
