@@ -1951,6 +1951,10 @@ pointer, unless it has been returned a second time by a different
 `ydb_file_name_to_id()`_ or `ydb_file_name_to_id_t()`_ is an
 application error with undefined consequences.
 
+A :code:`PARAMINVALID` error is issued if the input file name or file id parameter is NULL.
+Previously, the process terminated abnormally with a SIG-11 if the file id parameter was NULL
+and returned YDB_OK if the file name parameter was NULL.
+
 .. _ydb_file_is_identical():
 .. _ydb_file_is_identical_t():
 
@@ -1973,6 +1977,10 @@ Given two pointers to :code:`fileid` structures (see
 :code:`ydb_file_is_identical()` and :code:`ydb_file_is_identical_t()`
 return YDB_OK if the two :code:`fileid` structures are the same file
 and YDB_NOTOK otherwise.
+
+A :code:`PARAMINVALID` error is issued if the input file name or file id parameter is NULL.
+Previously, the process terminated abnormally with a SIG-11 if the file id parameter was NULL 
+and returned YDB_OK if the file name parameter was NULL.
 
 .. _ydb_file_name_to_id():
 .. _ydb_file_name_to_id_t():
@@ -2007,8 +2015,12 @@ application should call `ydb_file_id_free()`_ or
 leak.
 
 :code:`ydb_file_name_to_id()` and :code:`ydb_file_name_to_id_t()`
-:code:return :code:`YDB_OK`, `YDB_NOTOK` if the :code:`filename` is
-:code:NULL, or an `error return code`_.
+return :code:`YDB_OK`, :code:`YDB_NOTOK` if the :code:`filename` is
+NULL, or an `error return code`_.
+
+A :code:`PARAMINVALID` error is issued if the input file name or file id parameter is NULL.
+Previously, the process terminated abnormally with a SIG-11 if the file id parameter was NULL
+and returned YDB_OK if the file name parameter was NULL.
 
 .. _ydb_fork_n_core():
 
@@ -2847,7 +2859,7 @@ For debugging purposes, dump on :code:`writer`:
 - at the address :code:`buf_addr`, the lower of :code:`len_used` or
   :code:`len_alloc` bytes in `zwrite format`_.
 
-	As this function is intended for debugging and provides details of
+As this function is intended for debugging and provides details of
 internal structures, its output is likely to change as internal
 implementations change, even when stability of the external API is
 maintained.
