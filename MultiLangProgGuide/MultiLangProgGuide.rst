@@ -1951,7 +1951,7 @@ pointer, unless it has been returned a second time by a different
 `ydb_file_name_to_id()`_ or `ydb_file_name_to_id_t()`_ is an
 application error with undefined consequences.
 
-A :code:`PARAMINVALID` error is issued if the input :code:`filename` or :code:`fileid` parameter is NULL.
+A :code:`PARAMINVALID` error is issued if the input :code:`fileid` parameter is NULL.
 
 .. _ydb_file_is_identical():
 .. _ydb_file_is_identical_t():
@@ -1976,7 +1976,7 @@ Given two pointers to :code:`fileid` structures (see
 return YDB_OK if the two :code:`fileid` structures are the same file
 and YDB_NOTOK otherwise.
 
-A :code:`PARAMINVALID` error is issued if the input :code:`filename` or :code:`fileid` parameter is NULL.
+A :code:`PARAMINVALID` error is issued if the input :code:`fileid` parameter is NULL.
 
 .. _ydb_file_name_to_id():
 .. _ydb_file_name_to_id_t():
