@@ -59,12 +59,12 @@ There are two switches to turn on journaling - ENable/DISable and ON/OFF.
 i.e. To turn on journaling, use either:
 
 .. parsed-literal::
-   mupip set -journal=enable -region
+   mupip set -journal=enable -region '*'
 
 or
 
 .. parsed-literal::
-   mupip set -journal=on -region
+   mupip set -journal=on -region '*'
 
 Enabling or disabling journaling requires stand alone access to the database. Turning journaling on and off can be done when the database is in use. See `Set Action Qualifiers <https://docs.yottadb.com/AdminOpsGuide/ydbjournal.html#set-action-qualifiers>`_ for more information about options and settings.
 
