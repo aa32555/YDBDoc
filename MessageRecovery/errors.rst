@@ -10602,7 +10602,7 @@ PERMGENFAIL, Failed to determine access permissions to use for creation of xxxx 
 
 Run Time/MUPIP Error: This message indicates that YottaDB was unable to determine the permissions to use when creating a file or resource associated with database file yyyy. xxxx may be "ipc resources", "journal file", "backup file", or "snapshot file".
 
-Action: Note the user and group ownership of the database file and $gtm_exe/libyottadb.*, and the user and group permissions of the YottaDB process, and report them to your YottaDB support channel.
+Action: Note the user and group ownership of the database file and $ydb_dist/libyottadb.*, and the user and group permissions of the YottaDB process, and report them to your YottaDB support channel.
 
 ------------------
 PINENTRYERR
