@@ -613,7 +613,9 @@ Compiles routines to use library code in order to load literals instead of gener
 -noline_entry
 ~~~~~~~~~~~~~~~~~~~~
 
-Tells the compiler to fetch lines with labels, and then makes available all variables accessed in the block starting with those labels.
+YottaDB allows calls and transfer of control to label±offset^routine targets. If an application code uses only label^routine targets without offsets, compiling with -noline_entry produces more compact object code.
+
+Any attempt to use a label±offset^routine entryref in code compiled with -noline_entry raises the `LABELONLY error <https://docs.yottadb.com/MessageRecovery/errors.html#labelonly>`_. As the more compact object code produced by -noline_entry may or may not run faster than object code produced without using it, even if your application can use -noline_entry, you should benchmark to decide which is more performant.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 -[no]o[bject][=filename]
