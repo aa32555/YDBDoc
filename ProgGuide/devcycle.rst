@@ -609,6 +609,12 @@ Compiles routines to use library code in order to load literals instead of gener
 .. note::
    Both -DYNAMIC_LITERALS and -NOINLINE_LITERALS help optimize performance and virtual memory usage for applications whose source code includes literals. As the scalability and performance from reduced per-process memory usage may or may not compensate for the incremental cost of dynamically loading and unloading the data structures, and as the performance of routines vs. inline code can be affected by the availability of routines in cache, YottaDB suggests benchmarking to determine the combination of qualifiers best suited to each workload. Note that applications can freely mix routines compiled with different combinations of qualifiers.
 
+~~~~~~~~~~~~~~~~~~~~
+-noline_entry
+~~~~~~~~~~~~~~~~~~~~
+
+Tells the compiler to fetch lines with labels, and then makes available all variables accessed in the block starting with those labels.
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 -[no]o[bject][=filename]
 ~~~~~~~~~~~~~~~~~~~~~~~~~
