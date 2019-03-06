@@ -1504,6 +1504,26 @@ The Go Comprehensive API is a project for the future, to follow the C
 Go Utility Functions
 ====================
 
+----------------
+Go Error()
+----------------
+
+.. code-block:: go
+
+        func (err *YDBError) Error() string
+
+:code:`Error()` is a method to return the expected error message string. 
+
+---------------
+Go ErrorCode()
+---------------
+
+.. code-block:: go
+
+        func ErrorCode(err error) int
+
+:code:`ErrorCode()` is a function used to find the error return code.
+
 ---------
 Go Exit()
 ---------
@@ -1522,16 +1542,6 @@ databases cleanly, in practice thread shutdown may not always ensure
 that databases are closed cleanly. So, application code should invoke
 :code:`Exit()` prior to process exit, or when an application intends
 to continue with other work beyond use of YottaDB.
-
----------------
-Go ErrorCode()
----------------
-
-.. code-block:: go
-
-        func ErrorCode(err error) int
-
-:code:`ErrorCode()` is a function used to find the error return code. 
 
 -------------------
 Go IsLittleEndian()
