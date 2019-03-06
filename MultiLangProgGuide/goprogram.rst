@@ -1579,10 +1579,7 @@ Go NewError()
 
         func NewError(tptoken uint64, errstr *BufferT, errnum int) error
 
-:code:`NewError()` is a function to create a new YDBError and return it. Note that we use :code:`ydb_zstatus()`
-instead of using (for example) `Go ValE()`_ to fetch $ZSTATUS because :code:`ydb_zstatus` does not
-require a :code:`tptoken`. This means that we don't need to pass :code:`tptoken` to all the data access
-methods (For example, `Go BufferT ValStr()`_). 
+:code:`NewError()` is a function to create a new YDBError from :code:`errstr` and :code:`errnum`, setting the two private fields in the returned YDBError to the provided values.
 
 -------------
 Go ReleaseT()
