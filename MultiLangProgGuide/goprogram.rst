@@ -1523,6 +1523,16 @@ that databases are closed cleanly. So, application code should invoke
 :code:`Exit()` prior to process exit, or when an application intends
 to continue with other work beyond use of YottaDB.
 
+---------------
+Go ErrorCode()
+---------------
+
+.. code-block:: go
+
+        func ErrorCode(err error) int
+
+:code:`ErrorCode()` is a function used to find the error return code. 
+
 -------------------
 Go IsLittleEndian()
 -------------------
@@ -1550,6 +1560,19 @@ specified by :code:`status`.
   recognizes, it returns the error UNKNOWNSYSERR.
 - Otherwise, it returns the error message text template for the error
   number specified by :code:`status`.
+
+---------------
+Go NewError()
+---------------
+
+.. code-block:: go
+
+        func NewError(tptoken uint64, errstr *BufferT, errnum int) error
+
+:code:`NewError()` is a function to create a new YDBError and return it. Note that we use :code:`ydb_zstatus()`
+instead of using (for example) `Go ValE()`_ to fetch $ZSTATUS because :code:`ydb_zstatus` does not
+require a tptoken. This means that we don't need to pass tptoken to all the data access
+methods (For example, `Go BufferT ValStr()`_). 
 
 -------------
 Go ReleaseT()
