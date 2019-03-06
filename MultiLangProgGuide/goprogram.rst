@@ -1571,7 +1571,7 @@ Go NewError()
 
 :code:`NewError()` is a function to create a new YDBError and return it. Note that we use :code:`ydb_zstatus()`
 instead of using (for example) `Go ValE()`_ to fetch $ZSTATUS because :code:`ydb_zstatus` does not
-require a tptoken. This means that we don't need to pass tptoken to all the data access
+require a :code:`tptoken`. This means that we don't need to pass :code:`tptoken` to all the data access
 methods (For example, `Go BufferT ValStr()`_). 
 
 -------------
