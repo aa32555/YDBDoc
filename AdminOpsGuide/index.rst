@@ -30,8 +30,8 @@ Welcome to the Administration and Operations Guide!
    dockercontainer
    packaging
    tls
-   glossary
    extending
+   glossary
    LICENSE
 
 Indices and tables
