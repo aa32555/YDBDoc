@@ -1541,13 +1541,9 @@ YottaDB return a CALLINAFTEREXIT error.
 Although in theory typical processes should not need to call
 :code:`Exit()` because normal process termination should close
 databases cleanly, in practice thread shutdown may not always ensure
-that databases are closed cleanly. So, application code should invoke
-:code:`Exit()` prior to process exit, or when an application intends
-to continue with other work beyond use of YottaDB.
-
-Since the C :code:`atexit` functionality does not work in Go, use
-"defer yottadb.Exit()" at the outermost Go function in a user application,
-to ensure proper rundown
+that databases are closed cleanly, especially since the C :code:`atexit` functionality does not work in Go.
+Application code should invoke :code:`Exit()` prior to process exit, or when an application intends
+to continue with other work beyond use of YottaDB, to ensure proper rundown.
 
 -------------------
 Go IsLittleEndian()
