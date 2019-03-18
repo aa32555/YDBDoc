@@ -1536,7 +1536,7 @@ Go Exit()
 
 For a process that wishes to close YottaDB databases and no longer use
 YottaDB, the function wraps `ydb_exit() <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-exit>`_ so that any further calls to
-YottaDB return a CALLINAFTEREXIT` error.
+YottaDB return a CALLINAFTEREXIT error.
 
 Although in theory typical processes should not need to call
 :code:`Exit()` because normal process termination should close
@@ -1544,6 +1544,10 @@ databases cleanly, in practice thread shutdown may not always ensure
 that databases are closed cleanly. So, application code should invoke
 :code:`Exit()` prior to process exit, or when an application intends
 to continue with other work beyond use of YottaDB.
+
+Since the C :code:`atexit` functionality does not work in Go, use
+"defer yottadb.Exit()" at the outermost Go function in a user application,
+to ensure proper rundown
 
 -------------------
 Go IsLittleEndian()
