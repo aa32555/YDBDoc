@@ -1543,7 +1543,8 @@ Although in theory typical processes should not need to call
 databases cleanly, in practice - thread shutdown may not always ensure
 that databases are closed cleanly, especially since the C :code:`atexit` functionality does not reliably work in
 Go's multi-threaded environment. Application code should invoke :code:`Exit()` prior to process exit, or when an application intends
-to continue with other work beyond use of YottaDB, to ensure proper rundown.
+to continue with other work beyond use of YottaDB, to ensure proper rundown. To accomplish this, you can use a
+"defer yottadb.Exit()" statement early in the main routine's initialization.
 
 -------------------
 Go IsLittleEndian()
