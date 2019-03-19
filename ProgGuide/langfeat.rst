@@ -95,6 +95,7 @@ The format for an M global or local variable is:
 * The optional expressions specify the subscripts and must be enclosed in parentheses and separated by commas (,).
 
 Although there is no restriction on variable names in source code, the first 31 characters of a variable name are significant and subsequent characters are dropped internally. A variable can have up to 31 subscripts.
+(Learn more about the maximum length and subscript representation `here <gde.html#k-ey-size-size-in-bytes>`_.)
 
 ++++++++++++++++++++++++++
 M Collation Sequences
