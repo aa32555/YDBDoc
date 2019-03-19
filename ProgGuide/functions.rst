@@ -1544,6 +1544,8 @@ $VIEW() provides a means to access YottaDB environmental information. When Yotta
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "UNDEF"       | none             | Truth value showing whether undefined variables should be treated as having a null value (1 for "UNDEF"; 0 for "NOUNDEF"); YottaDB defaults to 0.                   |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| "YGVN2GDS"    | gvn              | Returns the internal subscript representation of the global variable.                                                                                                  |
++---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | "ZDATE_FORM"  | none             | Integer value showing whether four digit year code is active for $ZDATE(); YottaDB defaults to 0 (for "YY" format). Use the environment variable ydb_zdate_form     |
 |               |                  | to set the initial value of this factor. For usage examples, refer to “$ZDate()”.                                                                                   |
 +---------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
