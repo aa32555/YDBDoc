@@ -1258,9 +1258,9 @@ When determining the maximum key size, applications should consider the followin
 
 * YottaDB adds an extra byte for every string element, including the global name.
 
-For example, the key ^ACN ("Name", "Type") internally occupies 17 bytes.
+For example, the key ^ACN ("Name", "Type") internally occupies 17 bytes. Look at the `String Subscripts <https://docs.yottadb.com/AdminOpsGuide/gds.html#string-subscripts>`_ and `Numeric Subscripts <gds.html#numeric-subscripts>`_ sections for details on interpreted representations of global variables.
 
-By default, GDE uses a KEY_SIZE of 64 bytes
+By default, GDE uses a KEY_SIZE of 64 bytes.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 -[NO]L[OCK_CRIT_SEPARATE]
