@@ -1260,6 +1260,16 @@ When determining the maximum key size, applications should consider the followin
 
 For example, the key ^ACN("Name","Type") internally occupies 17 bytes. Look at the `String Subscripts <https://docs.yottadb.com/AdminOpsGuide/gds.html#string-subscripts>`_ and `Numeric Subscripts <gds.html#numeric-subscripts>`_ sections for details on interpreted representations of global variables. In practice, you can use `$VIEW with a YGVN2GDS argument <functions.html#argument-keywords-of-view>`_ to obtain the subscripted representation of your global variable.
 
+For example,
+
+.. parsed-literal::
+   YDB>s x="^ACN(""Name"",""Type"")"
+   YDB>s y=$view("YGVN2GDS",x)
+   YDB>w $L(y)
+   17
+   YDB>zwr y
+   y="ACN"_$C(0,255)_"Name"_$C(0,255)_"Type"_$C(0,0)
+
 By default, GDE uses a KEY_SIZE of 64 bytes.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
