@@ -618,12 +618,14 @@ ydb_cip  and ydb_cip_t offer better performance on calls after the first one.
 
 While ydb_ci() and ydb_cip() are for single threaded applications, ydb_ci_t() and ydb_cip_t() are for multi-threaded applications that call M routines. See the "Threads" section in the Multi-Language Programmer's Guide for details.
 
-**ydb_ci**
+~~~~~~
+ydb_ci
+~~~~~~
 
 .. parsed-literal::
    ydb_status_t ydb_ci(const ydb_char_t* c_call_name, ...);
 
-The variable argument function ydb_ci() is the interface that actually invokes the specified M routine and returns the results via parameters. The ydb_ci() call must be in the following format:
+The variable argument function ydb_ci() is the interface that actually invokes a specified M routine and returns the results via parameters. The ydb_ci() call must be in the following format:
 
 .. parsed-literal::
    status = ydb_ci(<c_call_name> [, ret_val] [, arg1] ...);
@@ -636,7 +638,9 @@ Optional list of arguments to be passed to the M routine's formallist: the numbe
 
 The status value returned by ydb_ci() indicates the YottaDB status code; zero (0), if successful, or a non-zero; $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling ydb_zstatus(). For more details, see “Print Error Messages”.
 
-**ydb_ci_t**
+~~~~~~~~
+ydb_ci_t
+~~~~~~~~
 
 .. parsed-literal::
    int ydb_ci_t(uint64_t tptoken, const char \*c_rtn_name, ...);
@@ -654,7 +658,9 @@ Second argument: ci_rtn_name, a null-terminated C character string indicating th
 
 ydb_ci_t() works in the same way and returns the same values as ydb_ci().
 
-**ydb_cip**
+~~~~~~~~
+ydb_cip
+~~~~~~~~
 
 .. parsed-literal::
    ydb_status_t ydb_cip(ci_name_descriptor \*ci_info, ...);
@@ -687,7 +693,9 @@ Optional list of arguments to be passed to the M routine's formallist: the numbe
 
 The status value returned by ydb_cip() indicates the YottaDB status code; zero (0), if successful, or a non-zero; $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling ydb_zstatus().
 
-**ydb_cip_t**
+~~~~~~~~~~
+ydb_cip_t
+~~~~~~~~~~
 
 .. parsed-literal::
    int ydb_cip_t(uint64_t tptoken, const char \*c_rtn_name, ...);
@@ -718,6 +726,10 @@ Here are some working examples of C programs that use call-ins to invoke YottaDB
 +--------------------------------+----------------------------------------------------------------------------------------------+
 
 **Print Error Messages**
+
+~~~~~~~~~~~~
+ydb_zstatus
+~~~~~~~~~~~~
 
 .. parsed-literal::
    void ydb_zstatus (ydb_char_t* msg_buffer, ydb_long_t buf_len);
