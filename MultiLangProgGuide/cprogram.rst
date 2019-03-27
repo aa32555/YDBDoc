@@ -1607,10 +1607,10 @@ If the requested :code:`timeout_nsec` exceeds
 Calling M Routines
 ===================
 
-M routines can be called from C with the following functions:
+M routines can be called from C with the following functions which are described in the `M Programmers Guide <https://docs.yottadb.com/ProgrammersGuide/extrout.html#calls-from-external-routines-call-ins>`_:
 
-* `ydb_ci <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-ci>`_
-* `ydb_ci_t <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-ci-t>`_
-* `ydb_cip <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip>`_
-* `ydb_cip_t <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip-t>`_
-* `ydb_zstatus <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-zstatus>`_
+* `ydb_ci() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-ci>`_
+* `ydb_ci_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-ci-t>`_
+* `ydb_cip() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip>`_
+* `ydb_cip_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip-t>`_
+* `ydb_zstatus() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-zstatus>`_
