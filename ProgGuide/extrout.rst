@@ -636,7 +636,7 @@ Optional second argument: ret_val, a pre-allocated pointer through which YottaDB
 
 Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
-The status value returned by ydb_ci() indicates the YottaDB status code: zero (0) if successful, or a non-zero $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling ydb_zstatus(). For more details, see the `ydb_status <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-zstatus>`_ section below.
+The status value returned by ydb_ci() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error string corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus(). For more details, see the `ydb_status <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-zstatus>`_ section below.
 
 ~~~~~~~~
 ydb_ci_t
@@ -691,7 +691,7 @@ Optional second argument: ret_val, a pre-allocated pointer through which YottaDB
 
 Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
-The status value returned by ydb_cip() indicates the YottaDB status code: zero (0) if successful, or a non-zero $ZSTATUS error code on failure. The $ZSTATUS message of the failure can be read into a buffer by immediately calling ydb_zstatus().
+The status value returned by ydb_cip() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error message corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus().
 
 ~~~~~~~~~~
 ydb_cip_t
