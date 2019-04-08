@@ -1212,7 +1212,7 @@ single-threaded applications. The discussion in `Threads <https://docs.yottadb.c
 more detailed information.
 
 `ydb_hiber_start()`_ and `ydb_hiber_start_wait_any()`_ are for use only with the SimpleAPI and not with the 
-Simple Threaded API.
+threaded Simple API.
 
 `ydb_exit()`_, `ydb_fork_n_core()`_, and
 `ydb_init()`_ do not have separate variants for single- and
@@ -1260,7 +1260,7 @@ If an external call attempts to call :code:`ydb_exit()`, a - :code:`YDB_ERR_INVY
 is required to remain operational even after the external call returns. For information about this error, see
 `INVYDBEXIT <https://docs.yottadb.com/MessageRecovery/errors.html#invydbexit>`_ in the Messages and Recovery Procedures guide.
 
-:code:`ydb_exit()` can be used with both the Simple API and Simple Threaded API.
+:code:`ydb_exit()` can be used with both the Simple API and threaded Simple API.
 
 .. _ydb_file_id_free():
 .. _ydb_file_id_free_t():
@@ -1374,7 +1374,7 @@ In a multi-threaded environment, only the thread that executes
 :code:`ydb_fork_n_core()` or :code:`ydb_fork_n_core()` survives in the
 child and is dumped.
 
-:code:`ydb_fork_n_core()` can be used with both the Simple API and Simple Threaded API.
+:code:`ydb_fork_n_core()` can be used with both the Simple API and threaded Simple API.
 
 .. _ydb_free():
 
@@ -1457,7 +1457,7 @@ its signal handlers.
 
 :code:`ydb_init()` returns :code:`YDB_OK` on success, and a positive non-zero value on error.
 
-:code:`ydb_init()` can be used with both the Simple API and Simple Threaded API.
+:code:`ydb_init()` can be used with both the Simple API and threaded Simple API.
 
 .. _ydb_malloc():
 
