@@ -1211,9 +1211,12 @@ multi-threaded applications, and those which do not are for
 single-threaded applications. The discussion in `Threads <https://docs.yottadb.com/MultiLangProgGuide/programmingnotes.html#threads>`_ provides
 more detailed information.
 
-Functions such as `ydb_exit()`_, `ydb_fork_n_core()`_, and
-`ydb_init()`_, which do not have separate variants for single- and
-multi-threaded applications, are suitable for both.
+`ydb_hiber_start()`_ and `ydb_hiber_start_wait_any()`_ are for use only with the SimpleAPI and not with the 
+Simple Threaded API.
+
+`ydb_exit()`_, `ydb_fork_n_core()`_, and
+`ydb_init()`_ do not have separate variants for single- and
+multi-threaded applications and are suitable for both.
 
 See also the description of the :code:`ydb_ci_t()` and
 :code:`ydb_cip_t()` functions in the `Programmers Guide
@@ -1253,7 +1256,7 @@ Note that a typical application should not need to call
 
 :code:`ydb_exit()` returns :code:`YDB_OK` on success, and a positive non-zero value on error.
 
-If an external call attempts to call :code:`ydb_exit()`, a :code:`YDB_ERR_INVYDBEXIT` error is produced, since the system
+If an external call attempts to call :code:`ydb_exit()`, a - :code:`YDB_ERR_INVYDBEXIT` error is returned, since YottaDB
 is required to remain operational even after the external call returns. For information about this error, see
 `INVYDBEXIT <https://docs.yottadb.com/MessageRecovery/errors.html#invydbexit>`_ in the Messages and Recovery Procedures guide.
 
