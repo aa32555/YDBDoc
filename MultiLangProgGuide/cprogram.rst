@@ -1251,6 +1251,12 @@ Note that a typical application should not need to call
 :code:`ydb_exit()`, but should instead just terminate with a call to
 :code:`exit()` which will perform any cleanup needed by YottaDB.
 
+:code:`ydb_exit()` returns :code:`YDB_OK` on success, and a positive non-zero value on error.
+
+If an external call attempts to call :code:`ydb_exit()`, a :code:`YDB_ERR_INVYDBEXIT` error is produced, since the system
+is required to remain operational even after the external call returns. For information about this error, see
+`INVYDBEXIT <https://docs.yottadb.com/MessageRecovery/errors.html#invydbexit>`_ in the Messages and Recovery Procedures guide.
+
 .. _ydb_file_id_free():
 .. _ydb_file_id_free_t():
 
