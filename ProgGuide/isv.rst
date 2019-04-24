@@ -174,7 +174,7 @@ For TCP sockets, <address> is the numeric IP address for the remote end of the c
 
 For TCP LISTENING sockets, <portnumber> is the local port on which socket_handle is listening for incoming connections. For LOCAL LISTENING sockets, it is the path of the socket.
 
-If the WRITE/WAIT was timed, $KEY returns an empty value if the wait timed out or there was no established connection. $KEY only has the selected handle, if any, immediately after a WRITE /WAIT. $KEY is also used by other socket I/O commands such as READ which sets it to the delimiter or malformed Unicode® character, if any, which terminated the read.
+If the WRITE /WAIT was timed, $KEY returns an empty value if the wait timed out or there was no established connection. $KEY only has the selected handle, if any, immediately after a WRITE /WAIT. $KEY is also used by other socket I/O commands such as READ which sets it to the delimiter or malformed Unicode® character, if any, which terminated the read.
 
 ---------------
 $PRINCIPAL
