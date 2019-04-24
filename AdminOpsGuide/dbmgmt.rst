@@ -2626,12 +2626,12 @@ Specifies, in MM access mode, the multiplying factor applied to the flush time t
 -DEFER_ALLOCATE
 ~~~~~~~~~~~~~~~~
 
-With -DEFER_ALLOCATE, GT.M instructs the file system to create the database file as a sparse file. Before using -DEFER_ALLOCATE, ensure that your underlying file system supports sparse files. By default UNIX file systems, and GT.M, use sparse (or lazy) allocation, which defers actual allocation until blocks are first written. The format of the DEFER_ALLOCATE qualifier is: 
+With -DEFER_ALLOCATE, YottaDB instructs the file system to create the database file as a sparse file. Before using -DEFER_ALLOCATE, ensure that your underlying file system supports sparse files. By default UNIX file systems, and YottaDB, use sparse (or lazy) allocation, which defers actual allocation until blocks are first written. The format of the DEFER_ALLOCATE qualifier is: 
 
 .. parsed-literal::
    -[NO]DEFER_ALLOCATE
 
-* Utilities such as du report typically show lower disk space usage for a database file with -DEFER_ALLOCATE because GT.M instructs the file system to defer disk space allocation to the time when there is an actual need. With -NODEFER_ALLOCATE, such utilities report higher disk space usage count as GT.M instructs the file system to preallocate disk space without waiting for a need to arise.
+* Utilities such as du report typically show lower disk space usage for a database file with -DEFER_ALLOCATE because YottaDB instructs the file system to defer disk space allocation to the time when there is an actual need. With -NODEFER_ALLOCATE, such utilities report higher disk space usage count as YottaDB instructs the file system to preallocate disk space without waiting for a need to arise.
 
 * -DEFER_ALLOCATE makes database file extensions lighter weight. However, disk activity may tend towards causing fragmentation.
 

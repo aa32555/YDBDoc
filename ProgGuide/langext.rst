@@ -760,7 +760,7 @@ Example:
 
 
 -----------------------------------------------------
-Extensions for the support for the Unicode® standard 
+Extensions for Unicode® standard support
 -----------------------------------------------------
 
 To represent and process strings that use international characters, YottaDB processes can use Unicode.
