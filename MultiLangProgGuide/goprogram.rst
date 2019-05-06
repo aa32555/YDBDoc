@@ -1505,7 +1505,7 @@ Go CallMT()
         func CallMT(tptoken uint64, errstr *BufferT, retvallen uint32, rtnname string, rtnargs ...interface{}) (string, error)
 
 As a wrapper for the C function `ydb_ci_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-ci-t>`_, the :code:`CallMT()` function is used to call M routines from Go,
-used when a single call to the function is anticipated. :code:`CallMT()` only supports read-only parameters at this time.
+used when a single call to the function is anticipated. :code:`CallMT()` only supports read-only parameters.
 
 - :code:`retvallen` needs to be of sufficient size to hold any value returned by the call. If the output value exceeds the buffer size, 
   a SIG-11 failure is likely as it will overwrite adjacently allocated memory, damaging storage management headers.
@@ -1525,6 +1525,8 @@ Example:
       }
       fmt.Println("Golang: retval =", retval)
 
+The HelloWorld program in the example returns a "HelloWorld" string in a language and dialect specified by parm1 and parm2. :code:`retvallen` is set to be 1024 bytes.
+
 Go CallMDescT()
 ---------------
 
@@ -1535,7 +1537,7 @@ Go CallMDescT()
 As a wrapper for the C function `ydb_cip_t() <https://docs.yottadb.com/ProgrammersGuide/extrout.html#ydb-cip-t>`_, the :code:`CallMDescT()` is a 
 method of the :code:`CallMDesc` (call descriptor) structure which, during the first call, saves information in the :code:`CallMDesc` structure that makes all following calls
 using the same descriptor structure able to run much faster by bypassing a lookup of the function name and going straight to the M routine being called.
-:code:`CallMDescT()` only supports read-only parameters at this time.
+:code:`CallMDescT()` only supports read-only parameters.
 
 - :code:`CallMDescT()` requires a :code:`CallMDesc` structure to have been created and initialized with the :code:`SetRtnName()` method.
 
