@@ -1519,13 +1519,13 @@ Example:
 
 .. parsed-literal::
    fmt.Println("Golang: Invoking HelloWorld")
-      retval, err := yottadb.CallMT(yottadb.NOTTP, nil, 1024, "HelloWorld", "parm1", "parm2", "parm3")
+      retval, err := yottadb.CallMT(yottadb.NOTTP, nil, 1024, "HelloWorld", "English", "USA")
       if nil != err {
       	panic(fmt.Sprintf("CallMT() call failed: %s", err))
       }
       fmt.Println("Golang: retval =", retval)
 
-The HelloWorld program in the example returns a "HelloWorld" string in a language and dialect specified by parm1 and parm2. :code:`retvallen` is set to be 1024 bytes.
+The HelloWorld program in the example returns a "HelloWorld" string in a language "English" and a location "USA" specified in the two parameters. :code:`retvallen` is set to be 1024 bytes.
 
 Go CallMDescT()
 ---------------
@@ -1548,7 +1548,7 @@ Example:
 
    fmt.Println("Golang: Invoking HelloWorld")
    mrtn.SetRtnName("HelloWorld")
-   retval, err := mrtn.CallMDescT(yottadb.NOTTP, nil, 1024, "parm1", "parm2", "parm3")
+   retval, err := mrtn.CallMDescT(yottadb.NOTTP, nil, 1024, "English", "USA")
    if nil != err { panic(fmt.Sprintf("CallMDescT() call failed: %s", err)) }
    fmt.Println("Golang: retval =", retval)
 
