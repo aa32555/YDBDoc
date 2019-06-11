@@ -682,6 +682,15 @@ This passes three values (TYPE, PRNTR, and WAITIM) to the new job, which starts 
 
 Example:
 
+.. parsed-literal::
+   set jout="serverjob.mjo"
+   set jerr="serverjob.mje"
+   job @("check(a,b):(OUTPUT="""_jout_""":ERROR="""_jerr_""")")
+
+This passes two values (a and b) to the new job, which starts at the label check of the current routine. It also specifies the stdout of the jobbed process to be the file name stored in the local variable jout and stderr to be the file name stored in the local variable jerr.
+
+Example:
+
 Refer to the sockexamplemulti31.m program in the `Using Socket Devices <https://docs.yottadb.com/ProgrammersGuide/ioproc.html#using-socket-devices>`_ section for more examples on the JOB command.
 
 ----------------
@@ -1681,17 +1690,17 @@ Enables ("LINK":"RECURSIVE") or disables ("LINK":"RECURSIVE") the ZLINK command 
 
 The default is VIEW "LINK":"NORECURSIVE".
 
-**[NO]LOGN[ONTP][=intexpr]**
+**[NO]LOGN[ONTP][:intexpr]**
 
 Allows a process to dynamically change the logging of NONTPRESTART messages to the operator log established at process startup by the environment variables ydb_nontprestart_log_delta and ydb_nontprestart_log_first.
 
 VIEW "NOLOGNONTP" turns off the logging of NONTPRESTART messages to the operator log.
 
-VIEW "LOGNONTP"[=intexpr] turns on logging of NONTPRESTART messages to the operator log. If no intexpr is specified, YottaDB uses the value of environment variable ydb_nontprestart_log_delta, if it is defined, and one otherwise (that is, every transaction restart will be logged). A negative value of intexpr turns off the logging of NONTPRESTART messages.
+VIEW "LOGNONTP"[:intexpr] turns on logging of NONTPRESTART messages to the operator log. If no intexpr is specified, YottaDB uses the value of environment variable ydb_nontprestart_log_delta, if it is defined, and one otherwise (that is, every transaction restart will be logged). A negative value of intexpr turns off the logging of NONTPRESTART messages.
 
-Note that it is not possible to perform the operations of ydb_nontprestart_log_first with VIEW "LOGNONTP"[=intexpr].
+Note that it is not possible to perform the operations of ydb_nontprestart_log_first with VIEW "LOGNONTP"[:intexpr].
 
-**[NO]LOGT[PRESTART][=intexpr]**
+**[NO]LOGT[PRESTART][:intexpr]**
 
 Allows a process to dynamically change the logging of TPRESTART messages to the operator log established at process startup by the environment variables ydb_tprestart_log_delta and ydb_tprestart_log_first.
 
@@ -1699,7 +1708,7 @@ VIEW "NOLOGTPRESTART" turns off the logging of TPRESTART messages to the operato
 
 VIEW "LOGTPRESTART"[=intexpr] turns on logging of TPRESTART messages to the operator log. If no intexpr is specified, YottaDB uses the value of environment variable ydb_tprestart_log_delta, if it is defined, and one otherwise (that is, every transaction restart will be logged). A negative value of intexpr turns off the logging of TPRESTART messages.
 
-Note that it is not possible to perform the operations of ydb_tprestart_log_first with VIEW "LOGTPRESTART"[=intexpr].
+Note that it is not possible to perform the operations of ydb_tprestart_log_first with VIEW "LOGTPRESTART"[:intexpr].
 
 **LV_GCOL**
 
