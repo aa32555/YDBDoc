@@ -1885,8 +1885,8 @@ M routines can be called from C with the following functions which are described
 Historically, the predecessors of the functions to call M routines
 returned positive return codes. In order to maintain backward
 compatibility, values returned by the above (except
-:code:`ydb_zstatus()` which is a :code:`void`)are positive values, whereas
+:code:`ydb_zstatus()` which is a :code:`void`) are positive values, whereas
 YottaDB `error return codes`_ are negative. For example, to return an
-invalid string length (`YDB_ERR_INVSTRLEN`_), the above functions will
+invalid string length (`YDB_ERR_INVSTRLEN`_), the :code:`ydb_ci*()` functions
 return :code:`-YDB_ERR_INVSTRLEN`, which is a positve value because
 :code:`YDB_ERR_STRLEN` is a negative value.
