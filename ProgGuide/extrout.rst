@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Integrating External Routines
@@ -493,7 +504,11 @@ libyottadb.h defines the following types that can be used in Call-Ins.
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | ydb_int_t             | ydb_int_t has 32-bit length on all platforms.                                                                                                                |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_int64_t           | ydb_int64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.                                                                   |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | ydb_uint_t            | ydb_uint_t has 32-bit length on all platforms                                                                                                                |
++-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ydb_uint64_t          | ydb_uint64_t has 64-bit length on 64-bit platforms, and is unsupported on 32-bit platforms.                                                                  |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | ydb_long_t            | ydb_long_t has 32-bit length on 32-bit platforms and 64-bit length on 64-bit platforms. It is much the same as the C language long type.                     |
 +-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -542,6 +557,8 @@ ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any
 
 .. note::
    libyottadb.h continues to be upward compatible with gtmxc_types.h. gtmxc_types.h explicitly marks the xc_* equivalent types as deprecated.
+
+ydb_int64_6 and ydb_uint64_t are supported on 64-bit platforms effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ and have no corresponding gtm_* type.
 
 **Call-In table**
 
@@ -732,9 +749,11 @@ ydb_zstatus
 ~~~~~~~~~~~~
 
 .. parsed-literal::
-   void ydb_zstatus (ydb_char_t* msg_buffer, ydb_long_t buf_len);
+   int ydb_zstatus (ydb_char_t* msg_buffer, ydb_long_t buf_len);
 
 This function returns the null-terminated $ZSTATUS message of the last failure via the buffer pointed by msg_buffer of size buf_len. The message is truncated to size buf_len if it does not fit into the buffer. ydb_zstatus() is useful if the external application needs the text message corresponding to the last YottaDB failure. A buffer of 2048 is sufficient to fit in any YottaDB message.
+
+Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_, ydb_zstatus() has an :code:`int` return value with a value of YDB_ERR_INVSTRLEN if the buffer supplied is not large enough to hold the message and YDB_OK otherwise. As with other YDB_ERR_INVSTRLEN return codes, ydb_zstatus() copies what can be copied to the buffer (including a null terminator byte) if the length is non-zero.
 
 **Exit from YottaDB**
 

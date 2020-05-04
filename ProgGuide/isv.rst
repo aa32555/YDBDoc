@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Instrinsic Special Variables
@@ -209,7 +220,7 @@ $Q[UIT] indicates whether the current block of code was called as an extrinsic f
 If $Q[UIT] contains 1 (when the current process-stack frame is invoked by an extrinsic function), the QUIT would therefore require an argument.
 
 .. note::
-   When a process is initiated, but before any commands are processed, the value of $Q[UIT] is zero (0). 
+   When a process is initiated, but before any commands are processed, the value of $Q[UIT] is zero (0).
 
 This special variable is mainly used in error-trapping conditions. Its value tells whether the current DO level was reached by means of a subroutine call (DO xxx) or by a function call (SET variable=$$xxx).
 
@@ -269,7 +280,7 @@ $SYSTEM
 ----------------
 
 $SY[STEM] contains a string that identifies the executing M instance. The value of $SYSTEM is a string that starts with a unique numeric code that identifies the manufacturer. Codes are assigned by the MDC (M Development Committee).
-       
+
 $SYSTEM in YottaDB starts with "47" followed by a comma and the evaluation of the environment variable ydb_sysid or gtm_sysid. If neither of the names have any evaluation (i.e. both are undefined), the value after the comma is gtm_sysid.
 
 ---------------
@@ -494,10 +505,10 @@ Example:
    quit
    $ yottadb -run foo 'BAR^FOOBAR("hello")'
 
-In this example, YottaDB processes the shell command line up to foo and puts the rest in $ZCMDLINE. This mechanism allows yottadb -run to invoke an arbitrary entryref with or without parameters. Note that this example encloses the command line argument with single quotes to prevent inappropriate expansion in Bourne-type shells. Always remember to use the escaping and quoting conventions of the shell and YottaDB to prevent inappropriate expansion. 
+In this example, YottaDB processes the shell command line up to foo and puts the rest in $ZCMDLINE. This mechanism allows yottadb -run to invoke an arbitrary entryref with or without parameters. Note that this example encloses the command line argument with single quotes to prevent inappropriate expansion in Bourne-type shells. Always remember to use the escaping and quoting conventions of the shell and YottaDB to prevent inappropriate expansion.
 
 .. note::
-   Use the ^%XCMD utility to XECUTEs code from the shell command line and return any error status (truncated to a single byte on UNIX) that the code generates. For more information, refer to “%XCMD”. 
+   Use the ^%XCMD utility to XECUTEs code from the shell command line and return any error status (truncated to a single byte on UNIX) that the code generates. For more information, refer to “%XCMD”.
 
 -------------
 $ZCOMPILE
@@ -565,7 +576,7 @@ $ZD[IRECTORY] contains the string value of the full path of the current director
 
 If the current directory does not exist at the time of YottaDB process activation, YottaDB errors out.
 
-Example: 
+Example:
 
 .. parsed-literal::
    YDB>WRITE $ZDIR
@@ -622,9 +633,9 @@ $ZGBLDIR
 
 $ZG[BLDIR] contains the value of the current Global Directory filename. When $ZGBLDIR specifies an invalid or inaccessible file, YottaDB cannot successfully perform database operations.
 
-YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the name $ydb_gbldir and the extension .gld in the current working directory.
+YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to the value of the environment variable gtm_gbldir, and if that is not defined, then to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the string $ydb_gbldir and the extension .gld in the current working directory.
 
-$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR to the translation of ydb_gbldir if that environment variable is defined. If it is not defined, then SET $ZGBLDIR="" causes YottaDB to construct a file name using the name $ydb_gbldir.gld in the current directory. NEWing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. For code that immediately SETs $ZGBLDIR after NEW'ng it that behavior doesn't matter, but without an associated SET, such a change may seem counterintuitive.  A $ZGBLDIR value may include an environment variable.
+$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR using the same logic as at process startup. NEWing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. A $ZGBLDIR value may include an environment variable.
 
 SETting $ZGBLDIR also causes YottaDB to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB triggers an error without changing the value of $ZGBLDIR.
 
@@ -664,11 +675,41 @@ This example defines the environment variable ydb_gbldir. Upon entering YottaDB 
 
 The SET command attempts to change the value of $ZGBLDIR to test.gld. Because the file does not exist, YottaDB reports an error and does not change the value of $ZGBLDIR.
 
+To facilitate application migration to YottaDB from other M implementations (for example to convert UCI and VOL specifications to global directories) in the environment specification, YottaDB provides an interface to translate strings to global directory filenames. With the exception of the function name, this facility is identical to that `used for extended references <./langfeat.html#optional-yottadb-environment-translation-facility>`_.
+
+.. note::
+   Using this facility impacts the performance of *every* global access. Make sure you use it only when static determination of the global directory is not feasible. When used, maximize the efficiency of the translation routines.
+
+Enable the facility by setting the environment variable :code:`ydb_gbldir_translate` to the path of a shared library with the entry point :code:`ydb_gbldir_xlate()` . The global directory used is the value assigned to $zgbldir as translated by the routine. :code:`ydb_gbldir_xlate()` has the same signature as the ydb_env_xlate() routine used for environment translation.
+
+.. parsed-literal::
+   int ydb_gbldir_xlate(ydb_string_t \*in1, ydb_string_t \*in2, ydb_string_t \*in3, ydb_string_t \*out)
+
+where ydb_string_t is a structure defined in libyottadb.h as follows:
+
+.. parsed-literal::
+   typedef struct
+   {
+	unsigned long	length;
+	char		\*address;
+   } ydb_string_t;
+
+and
+
+* :code:`in1` references the value being assigned to $zgbldir;
+* :code:`in2` is the NULL string - the parameter exists only so that the signature matches that of :code:`ydb_env_translate()`;
+* :code:`in3` references $zdirectory the current directory of the process; and
+* :code:`out` is a return value that references the actual global directory file to be used.
+
+A return value other than zero (0) indicates an error in translation, and is reported as a YottaDB error.
+
+Refer to `the extended reference facility <./langfeat.html#optional-yottadb-environment-translation-facility>`_ for more information.
+
 -----------------
 $ZHOROLOG
 -----------------
 
-$ZH[OROLOG] returns 4 comma-separated pieces (for example, "63638,39194,258602,14400"). The first two pieces are identical to the two pieces of $HOROLOG. $ZHOROLOG is a drop-in replacement for $HOROLOG in all application code of the form $PIECE($HOROLOG,",",...). For example, $ZHOROLOG can be used as the first argument of $ZDATE(). The third piece is the number of microseconds in the current second. The accuracy of the third piece is subject to the precision of the system clock. The fourth piece is an offset in seconds to UTC. For any valid UTC time offset, the fourth piece is a number between -43200 (for UTC-12:00) and +50400 (for UTC+14:00). The value of the fourth piece remains constant all through the year except for those places that observe daylight saving time. To obtain the $HOROLOG representation of UTC, add the fourth piece to the second piece of $ZHOROLOG and proceed as follows: 
+$ZH[OROLOG] returns 4 comma-separated pieces (for example, "63638,39194,258602,14400"). The first two pieces are identical to the two pieces of $HOROLOG. $ZHOROLOG is a drop-in replacement for $HOROLOG in all application code of the form $PIECE($HOROLOG,",",...). For example, $ZHOROLOG can be used as the first argument of $ZDATE(). The third piece is the number of microseconds in the current second. The accuracy of the third piece is subject to the precision of the system clock. The fourth piece is an offset in seconds to UTC. For any valid UTC time offset, the fourth piece is a number between -43200 (for UTC-12:00) and +50400 (for UTC+14:00). The value of the fourth piece remains constant all through the year except for those places that observe daylight saving time. To obtain the $HOROLOG representation of UTC, add the fourth piece to the second piece of $ZHOROLOG and proceed as follows:
 
 * If the result is a negative number, subtract one from the first piece and add 86400 (number of seconds in a day) to the second piece.
 * If the result is a positive number greater than 86400, add one to the first piece and subtract 86400 from the second piece.
@@ -689,7 +730,7 @@ Example:
     open descname:(shell="/bin/sh":command=shcommand:readonly)::"pipe"
     use descname read dateline use $principal close descname
     quit dateline
-   displaytzdetails(zutzh,zone)  
+   displaytzdetails(zutzh,zone)
     set zut=$piece(zutzh," ",1)   ; $ZUT
     set zh=$piece(zutzh," ",2)    ; $ZHOROLOG
     set zhfp=$piece(zh,",",1)     ; first piece of $ZH of zone
@@ -733,7 +774,7 @@ The initial value for $ZINTERRUPT is taken from the UNIX environment variable yd
 .. parsed-literal::
    IF $ZJOBEXAM()
 
-The IF statement executes the $ZJOBEXAM function but effectively discards the return value. 
+The IF statement executes the $ZJOBEXAM function but effectively discards the return value.
 
 .. note::
    If the default value for $ZINTERRUPT is modified, no $ZJOBEXAM() will occur unless the replacement value directly or indirectly invokes that function. In other words, while $ZJOBEXAM() is part of the interrupt handling by default, it is not an implicit part of the interrupt handling.
@@ -744,7 +785,7 @@ Interrupt Handling
 
 YottaDB process execution is interruptible with the following events:
 
-* Typing CTRL+C or getting SIGINT (if CENABLE). YottaDB ignores SIGINT (CTRL+C) if $PRINCIPAL is not a terminal. 
+* Typing CTRL+C or getting SIGINT (if CENABLE). YottaDB ignores SIGINT (CTRL+C) if $PRINCIPAL is not a terminal.
 * Typing one of the CTRAP characters
 * Exceeding $ZMAXTPTIME in a transaction
 * Getting a MUPIP INTRPT (SIGUSR1)
@@ -777,7 +818,7 @@ During the execution of the interrupt handling code, $ZINTERRUPT evaluates to 1 
 
 If an error occurs while compiling the $ZINTERRUPT code, the error handler is not invoked (the error handler is invoked if an error occurs while executing the $ZINTERRUPT code), YottaDB sends the YDB-ERRWZINTR message and the compiler error message to the operator log facility. If the YottaDB process is at a direct mode prompt or is executing a direct mode command (for example, a FOR loop), YottaDB also sends the YDB-ERRWZINTR error message to the user console along with the compilation error. In both cases, the interrupted process resumes execution without performing any action specified by the defective $ZINTERRUPT vector.
 
-If YottaDB encounters an error during creation of the interrupt handler's stack frame (before transferring control to the application code specified by the vector), that error is prefixed with a YDB-ERRWZINTR error. The error handler then executes normal error processing associated with the interrupted routine. Any other errors that occur in code called by the interrupt vector invoke error processing as described in `Chapter 13: “Error Processing” <./errproc.html>`_. 
+If YottaDB encounters an error during creation of the interrupt handler's stack frame (before transferring control to the application code specified by the vector), that error is prefixed with a YDB-ERRWZINTR error. The error handler then executes normal error processing associated with the interrupted routine. Any other errors that occur in code called by the interrupt vector invoke error processing as described in `Chapter 13: “Error Processing” <./errproc.html>`_.
 
 .. parsed-literal::
    The interrupt handler does not operate "outside" the current M environment but rather within the environment of the process.
@@ -873,7 +914,7 @@ Example:
     4
    YDB>
 
-This program, executed from Direct Mode, produces a value of 4 for $ZLEVEL. If you run this program from the shell, the value of $ZLEVEL is three (3). 
+This program, executed from Direct Mode, produces a value of 4 for $ZLEVEL. If you run this program from the shell, the value of $ZLEVEL is three (3).
 
 ------------------
 $ZMAXTPTIME
@@ -898,7 +939,7 @@ Example:
      write "Start with $ZMAXTPTIME=",$ZMAXTPTIME,":",!
      for sleep=3:2:9 do
      . set retlvl=$zlevel
-     . do longtran;ztrap on longtran 
+     . do longtran;ztrap on longtran
      ;continues execution
      ;on next line
      . write "(^X,^Y)=(",^X,",",^Y,")",!
@@ -1026,7 +1067,7 @@ Example:
 .. parsed-literal::
    YDB>write $zpatnumeric
    UTF-8
-   YDB>Write $Char($$FUNC^%HD("D67"))?.N ; This is the Malayalam decimal digit 1                            
+   YDB>Write $Char($$FUNC^%HD("D67"))?.N ; This is the Malayalam decimal digit 1
    1
    YDB>Write 1+$Char($$FUNC^%HD("D67"))
    1
@@ -1137,7 +1178,7 @@ If ydb_zquit_anyway is not defined or evaluates to 0 or any case-independent str
    write "Hello ",expr1,!
    quit
 
-When the ydb_zquit_anyway functionality is diabled, extrinsic function invocations return an error as per the standard. 
+When the ydb_zquit_anyway functionality is diabled, extrinsic function invocations return an error as per the standard.
 
 .. parsed-literal::
    YDB>write $zquit
@@ -1429,7 +1470,7 @@ By suffixing one or more directory names in $ZROUTINES with a single asterisk (*
 * Changing $ZROUTINES causes all routines linked from auto-relink-enabled directories in the process to be re-linked.
 * Note that a relink does not automatically reload a routine every time. When YottaDB initiates a relink and the object file (object hash) is the same as the existing one, YottaDB bypasses the relink and uses the existing object file.
 
-The ZRUPDATE command publishes new versions of routines to subscribers. 
+The ZRUPDATE command publishes new versions of routines to subscribers.
 
 --------------------
 $ZSOURCE
@@ -1443,7 +1484,7 @@ The file name may contain a file extension. If the extension is .m or .o, $ZSOUR
 
 If $ZSOURCE contains a file with an extension other than .m or .o, ZEDIT processes it but ZLINK returns an error message
 
-$ZSOURCE is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). A $ZSOURCE value may include an environment variable. YottaDB handles logical names that translate to other logical names by performing iterative translations. 
+$ZSOURCE is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). A $ZSOURCE value may include an environment variable. YottaDB handles logical names that translate to other logical names by performing iterative translations.
 
 Example:
 
@@ -1541,13 +1582,13 @@ This example sets $ZSTEP to code that displays the contents of the next line to 
 $ZSTRPLLIM
 -----------------
 
-$ZSTRP[LLIM] provides a way for a process to limit its process private memory used for local variable and scratch storage. When the value is 0 or negative, the default, there is no limit. A positive value specifies a byte limit. When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces an STPCRIT error. By default, a later request for memory produces an STPOFLOW, unless subsequent to STPCRIT , $ZSTRPLLIM has been set to the same or higher limit. Note that YottaDB allocates memory in large blocks so the interaction of $ZSTRPLLIM with memory growth is not exact. When the ydb_string_pool_limit environment variable specifies a positive value, YottaDB uses it for the initial value of $ZSTRPLLIM. 
+$ZSTRP[LLIM] provides a way for a process to limit its process private memory used for local variable and scratch storage. When the value is 0 or negative, the default, there is no limit. A positive value specifies a byte limit. When a request for additional memory exceeds the limit, YottaDB does the expansion and then produces an STPCRIT error. By default, a later request for memory produces an STPOFLOW, unless subsequent to STPCRIT , $ZSTRPLLIM has been set to the same or higher limit. Note that YottaDB allocates memory in large blocks so the interaction of $ZSTRPLLIM with memory growth is not exact. When the ydb_string_pool_limit environment variable specifies a positive value, YottaDB uses it for the initial value of $ZSTRPLLIM.
 
 -----------------
 $ZSYSTEM
 -----------------
 
-$ZSY[STEM] holds the value of the status code for the last subprocess invoked with the ZSYSTEM command. 
+$ZSY[STEM] holds the value of the status code for the last subprocess invoked with the ZSYSTEM command.
 
 ---------------
 $ZTEXIT
@@ -1629,9 +1670,9 @@ $ZTIMEOUT
 $ZTIMEOUT controls a single process wide timer. The format of the $ZTIMEOUT ISV is:
 
 .. parsed-literal::
-   $ZTIMeout=([timeout][:labelref]) 
+   $ZTIMeout=([timeout][:labelref])
 
-* The optional timeout in seconds specifies with millisecond accuracy how long from the current time the timer interrupts the process. If the specified timeout is negative, YottaDB cancels the timer. If the timeout is zero, YottaDB treats it as it would a DO of the vector. 
+* The optional timeout in seconds specifies with millisecond accuracy how long from the current time the timer interrupts the process. If the specified timeout is negative, YottaDB cancels the timer. If the timeout is zero, YottaDB treats it as it would a DO of the vector.
 * The optional labelref specifies a code vector defining a fragment of M code to which YottaDB transfers control as if with a DO when the timeout expires. If the timeout is missing, the assignment must start with a colon and only changes the vector, and in this case, if the timeout is the empty string, YottaDB removes any current vector.
 
 Note that YottaDB only recognizes interrupts such as from $ZTIMEOUT at points where it can properly resume operation, such as the beginning of a line, when waiting on a command with a timeout, or when starting a FOR iteration. When a timeout occurs, if the last assignment specified no vector, YottaDB uses the current $ETRAP or $ZTRAP. YottaDB rejects an attempted KILL of $ZTIMeout with the VAREXPECTED error and an attempted NEW of $ZTIMeout with the SVNONEW error.
@@ -1702,7 +1743,7 @@ The four settings of ydb_ztrap_form are:
 $ZUSEDSTOR
 -----------------
 
-$ZUSEDSTOR is the value in $ZALLOCSTOR minus storage management overhead and represents the actual memory, in bytes, requested by current activities. It provides one view (see also `$ZALlocstor <./isv.html#zallocstor>`_ and `$ZREalstor <./isv.html#zrealstor>`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZUSEDSTOR to be SET or NEWed. 
+$ZUSEDSTOR is the value in $ZALLOCSTOR minus storage management overhead and represents the actual memory, in bytes, requested by current activities. It provides one view (see also `$ZALlocstor <./isv.html#zallocstor>`_ and `$ZREalstor <./isv.html#zrealstor>`_) of the process memory utilization and can help identify storage related problems. YottaDB does not permit $ZUSEDSTOR to be SET or NEWed.
 
 -----------------
 $ZUT
@@ -1717,7 +1758,7 @@ $ZVERSION
 $ZV[ERSION] contains a string value identifying the GT.M version on which the YottaDB release is built. $ZV[ERSION] is a space-delimited string with four pieces as follows:
 
 .. parsed-literal::
-   <product> <release> <OS> <architecture> 
+   <product> <release> <OS> <architecture>
 
 <product> is always "GT.M".
 
@@ -1740,7 +1781,7 @@ M routines cannot modify $ZVERSION.
 Example:
 
 .. parsed-literal::
-   YDB>w $zversion
+   YDB>write $zversion
    GT.M V6.0-003 Linux x86_64
 
 This example displays the current version identifier for GT.M.
@@ -1784,6 +1825,42 @@ The $ZYRE[LEASE] intrinsic special variable contains a string value that applica
 
 
 ------------------
+$ZYSQLNULL
+------------------
+
+The read-only $ZYSQLNULL intrinsic special variable is conceptually equivalent to a logical value of unknown, and can be assigned as the value or used as a subscript of a local variable.
+
+When $ZYSQLNULL is an operand, the results are as follows:
+
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Operator(s)                                         | Result                                                                                              |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Binary :code:`!`                                    | If the other operand evaluates to true (1), the result is true, otherwise the result is $ZYSQLNULL  |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Binary :code:`&`                                    | If the other operand evalutes to false (0), the result is false, otherwise the result is $ZYSQLNULL |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| All binary operators except :code:`!` and :code:`&` | Regardless of the value of the other operand, the result is $ZYSQLNULL                              |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Unary :code:`+`                                     | $ZYSQLNULL                                                                                          |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Unary :code:`-`                                     | $ZYSQLNULL                                                                                          |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+| Unary :code:`'`                                     | $ZYSQLNULL                                                                                          |
++-----------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+
+$TEST has only 2 values: false (0) and true (1). An IF statement whose condition evaluates to $ZYSQLNULL sets $TEST to 0 and does not execute the rest the line. Commands with postconditionals that evaluate to $ZYSQLNULL do not execute the command.
+
+ZSHOW and ZWRITE of $ZYSQLNULL values show a value of $ZYSQLNULL. WRITE does not show any value for $ZYSQLNULL just as it does with :code:`""`.
+
+$ZYSQLNULL can be a subscript of a local variable. In that case, it collates after all other subscripts, i.e., $ORDER() and $QUERY() return that subscript at the very end.
+
+The function $ZYISSQLNULL() returns 1 if its sole argument has a value of $ZYSQLNULL, and 0 otherwise.
+
+Using $ZYSQLNULL as a subscript or assigning it as the value of a global variable (including implicitly with a MERGE), using it as a subscript in a LOCK/ZALLOCATE/ZDEALLOCATE command, or in a context that expects an integer or a numeric value raises the `ZYSQLNULLNOTVALID` error. Other than usage as an operand as discussed above, $ZYSQLNULL in a context that expects a string, e.g. :code:`$ASCII($ZYSQLNULL,1)`, is treated like the empty string  :code:`""`.
+
+$ZYSQLNULL was added to YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+
+------------------
 Trigger ISVs
 ------------------
 
@@ -1799,7 +1876,7 @@ Within trigger context, $ZTDATA returns $DATA(@$REFERENCE)#2 for a SET or $DATA(
 $ZTDELIM
 ++++++++++++++
 
-Within a SET trigger context, $ZTDE[LIM] returns the piece separator, as specified by -delim in the trigger definition. This allows triggers to extract updated pieces defined in $ZTUPDATE without having the piece separator hard coded into the routine. Outside of a SET trigger context, $ZTDELIM is null. 
+Within a SET trigger context, $ZTDE[LIM] returns the piece separator, as specified by -delim in the trigger definition. This allows triggers to extract updated pieces defined in $ZTUPDATE without having the piece separator hard coded into the routine. Outside of a SET trigger context, $ZTDELIM is null.
 
 +++++++++++++
 $ZTLEVEL
@@ -1819,7 +1896,7 @@ These trigger definitions show different values of $ZTLEVEL when two triggers ar
 
 .. parsed-literal::
    +^Acct("ID") -commands=set -xecute="set ^Acct(1)=$ztvalue+1"
-   +^Acct(sub=:) -command=set -xecute="set ^X($ztvalue)=sub" 
+   +^Acct(sub=:) -command=set -xecute="set ^X($ztvalue)=sub"
 
 SET ^Acct("ID")=10 invokes both the above triggers in some order and $ZTLEVEL will have the same value in both because these triggers are chained rather than nested.
 
@@ -1827,7 +1904,7 @@ SET ^Acct("ID")=10 invokes both the above triggers in some order and $ZTLEVEL wi
 $ZTNAME
 +++++++++++++++
 
-Within a trigger context, $ZTNAME returns the trigger name. Outside a trigger context, $ZTNAME returns an empty string. 
+Within a trigger context, $ZTNAME returns the trigger name. Outside a trigger context, $ZTNAME returns an empty string.
 
 ++++++++++++
 $ZTOLDVAL
@@ -1838,12 +1915,12 @@ Within trigger context, $ZTOLDVAL returns the prior (old) value of the global no
 Example:
 
 .. parsed-literal::
-   +^Acct(1,"ID") -commands=Set -xecute="Write:$ZTOLdval ""The prior value of ^Acct(1,ID) was: "",$ZTOLdval" 
+   +^Acct(1,"ID") -commands=Set -xecute="Write:$ZTOLdval ""The prior value of ^Acct(1,ID) was: "",$ZTOLdval"
 
 This trigger gets invoked with a SET and displays the prior value (if it exists) of ^Acct(1,"ID").
 
 .. parsed-literal::
-   YDB>w ^Acct(1,"ID")       
+   YDB>w ^Acct(1,"ID")
    1975
    YDB>s ^Acct(1,"ID")=2011
    The prior value of ^Acct(1,ID) was: 1975
@@ -1852,7 +1929,7 @@ This trigger gets invoked with a SET and displays the prior value (if it exists)
 $ZTRIGGEROP
 +++++++++++++++
 
-Within trigger context, for SET (including MERGE and $INCREMENT() operations), $ZTRIGGEROP has the value "S". For KILL, $ZTRIGGEROP has the value "K" For ZKILL or ZWITHDRAW, $ZTRIGGEROP has the value "ZK". 
+Within trigger context, for SET (including MERGE and $INCREMENT() operations), $ZTRIGGEROP has the value "S". For KILL, $ZTRIGGEROP has the value "K" For ZKILL or ZWITHDRAW, $ZTRIGGEROP has the value "ZK".
 
 +++++++++++++++
 $ZTSLATE
@@ -1880,7 +1957,7 @@ Within trigger context, for SET commands where the YottaDB trigger specifies a p
 Example:
 
 .. parsed-literal::
-   +^trigvn -commands=Set -pieces=1;3:6 -delim="|" -xecute="Write !,$ZTUPDATE" 
+   +^trigvn -commands=Set -pieces=1;3:6 -delim="|" -xecute="Write !,$ZTUPDATE"
 
 In the above trigger definition entry, $ZTUPDATE displays a comma separated list of the changed piece numbers if one of the pieces of interest: 1,3,4,5,or 6 are modified by the update.
 
@@ -1888,7 +1965,7 @@ In the above trigger definition entry, $ZTUPDATE displays a comma separated list
    YDB>write ^trigvn
    Window|Table|Chair|Curtain|Cushion|Air Conditioner
    YDB>set ^trigvn="Window|Dining Table|Chair|Vignette|Pillow|Air Conditioner"
-   4,5 
+   4,5
 
 Note that even though piece numbers 2,4 and 5 are changed, $ZTUPDATE displays only 4,5 because the trigger is not defined for updates for the second piece.
 
@@ -1951,8 +2028,8 @@ The following examples are derived from the FIS Profile application.
 Nodes in ^ACN(CID,50) have TYPE in piece 1, CLS in piece 2, FEEPLN in piece 15 and EMPLNO in piece 31. Indexes are ^XACN(CLS,ACN,CID), ^XREF("EMPLCTA",EMPLNO,ACN,TYPE,CID) and ^XREF("FEEPLN",FEEPLN,CID) and use ACN from the first piece of ^ACN(CLS,99). These indices are maintained with four triggers: one invoked by a KILL or ZKill of an ^ACN(:,50) node and three invoked by SETs to different pieces of ^ACN(:,50) nodes. Note that ACN, CID, CLS and TYPE are required, whereas EMPLNO and FEEPLN can be null, which requires (in our convention) the use of $ZC(254) in indices. The triggerfile definitions are:
 
 .. parsed-literal::
-   +^ACN(cid=:,50) -zdelim="|" -pieces=2 -commands=SET -xecute="Do ^SclsACN50"  
-   +^ACN(cid=:,50) -zdelim="|" -pieces=1,31 -commands=SET -xecute="Do ^SemplnoTypeACN50" +^ACN(cid=:,50) -zdelim="|" -pieces=15 -commands=SET -xecute="Do ^SfeeplnACN50" 
+   +^ACN(cid=:,50) -zdelim="|" -pieces=2 -commands=SET -xecute="Do ^SclsACN50"
+   +^ACN(cid=:,50) -zdelim="|" -pieces=1,31 -commands=SET -xecute="Do ^SemplnoTypeACN50" +^ACN(cid=:,50) -zdelim="|" -pieces=15 -commands=SET -xecute="Do ^SfeeplnACN50"
    +^ACN(cid=:,50) -commands=KILL,ZKill -xecute="Do ^KACN50"
 
 The code in KACN50.m KILLs cross reference indices when the application deletes any ^ACN(:,50).
@@ -1963,7 +2040,7 @@ The code in KACN50.m KILLs cross reference indices when the application deletes 
      Set cls=$Piece($ZTOLD,"|",2)                   ; CLS
      Set emplno=$Piece($ZTOLD,"|",31)
      Set:'$Length(emplno) emplno=$ZC(254)                ; EMPLNO
-     Set feepln=$Piece($ZTOLD,"|",15) 
+     Set feepln=$Piece($ZTOLD,"|",15)
      Set:'$L(feepln) feepln=$ZC(254)                     ; FEEPLN
      Set type=$Piece($ZTOLD,"|",1)                  ; TYPE
      Set acn=$Piece(^ACN(cid,99),"|",1)             ; ACN
@@ -1976,16 +2053,16 @@ The routine in SclsACN50.m creates cross references for a SET or a SET $PIECE() 
 
 .. parsed-literal::
    SClsACN50 ; Update to CLS in ^ACN(,50)
-    ; Capture information 
-    Set oldcls=$Piece($ZTOLD,"|",2)                ; Old CLS 
-    Set cls=$Piece($ZTVAL,"|",2)                   ; New CLS 
-    Set acn=$Piece(^ACN(cid,99),"|",1)             ; ACN 
+    ; Capture information
+    Set oldcls=$Piece($ZTOLD,"|",2)                ; Old CLS
+    Set cls=$Piece($ZTVAL,"|",2)                   ; New CLS
+    Set acn=$Piece(^ACN(cid,99),"|",1)             ; ACN
     Set processMode=$Piece($ZTWORM,"|",1)          ; Process
     If processMode<2 Kill ^XACN(oldcls,acn,cid)
-    Set ^XACN(cls,acn,cid)="" 
+    Set ^XACN(cls,acn,cid)=""
     Quit
 
-Note that the example is written for clarity. Eliminating values that need not be assigned to temporary local variables produces: 
+Note that the example is written for clarity. Eliminating values that need not be assigned to temporary local variables produces:
 
 .. parsed-literal::
    SclsACN50
@@ -2003,7 +2080,7 @@ In the interest of readability most triggerfile definitions in this chapter are 
 
 .. parsed-literal::
    EmplnoTypeACN50 ; Update to EMPLNO and/or TYPE in ^ACN(,50)
-    ; Capture information 
+    ; Capture information
     Set oldemplno=$Piece($ZTOLD,"|",31)
     Set:'$Length(oldemplno) oldemplno=$ZC(254)
     Set emplno=$Piece($ZTVAL,"|",31)
@@ -2013,7 +2090,7 @@ In the interest of readability most triggerfile definitions in this chapter are 
     Set acn=$Piece(^ACN(cid,99),"|",1)
     Set processMode=$Piece($ZTWORM,"|",1)
     If processMode<2 Do
-    . Kill ^XREF("EMPLNO",oldemplno,acn,oldtype,cid) 
+    . Kill ^XREF("EMPLNO",oldemplno,acn,oldtype,cid)
     . Set ^XREF("EMPLNO",emplno,acn,type,cid)=""
     Quit
 
@@ -2021,15 +2098,12 @@ The code in SFeeplnACN50.m handles changes to piece 15.
 
 .. parsed-literal::
    SFeeplnACN50 ; Update to FEEPLN in ^ACN(,50)
-     ; Capture information     
+     ; Capture information
      Set oldfeepln=$Piece($ZTOLD,"|",15)
-     Set:'$Length(oldfeepln) oldfeepln=$ZC(254)    
+     Set:'$Length(oldfeepln) oldfeepln=$ZC(254)
      Set feepln=$Piece($ZTVAL,"|",15)
      Set:'$Length(feepln) feepln=$ZC(254)
      Set processMode=$Piece($ZTWORM,"|",1)
-     If processMode<2 Do 
+     If processMode<2 Do
      . Kill ^XREF("FEEPLN",oldfeepln,cid) Set ^XREF("FEEPLN",feepln,cid)=""
      Quit
-
-
- 
