@@ -1856,7 +1856,7 @@ $ZYSQLNULL can be a subscript of a local variable. In that case, it collates aft
 
 The function $ZYISSQLNULL() returns 1 if its sole argument has a value of $ZYSQLNULL, and 0 otherwise.
 
-Using $ZYSQLNULL as a subscript or assigning it as the value of a global variable (including implicitly with a MERGE), using it as a subscript in a LOCK/ZALLOCATE/ZDEALLOCATE command, or in a context that expects an integer or a numeric value raises the `ZYSQLNULLNOTVALID` error. Other than usage as an operand as discussed above, $ZYSQLNULL in a context that expects a string, e.g. :code:`$ASCII($ZYSQLNULL,1)`, is treated like the empty string  :code:`""`.
+Using $ZYSQLNULL as a subscript or assigning it as the value of a global variable (including implicitly with a MERGE), using it as a subscript in a LOCK/ZALLOCATE/ZDEALLOCATE command, or in a context that expects an integer or a numeric value raises the ZYSQLNULLNOTVALID error. Other than usage as an operand as discussed above, $ZYSQLNULL in a context that expects a string, e.g. :code:`$ASCII($ZYSQLNULL,1)`, is treated like the empty string  :code:`""`.
 
 $ZYSQLNULL was added to YottaDB effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 

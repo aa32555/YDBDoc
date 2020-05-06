@@ -2182,9 +2182,9 @@ The format for the $ZCONVERT() function is:
 * In the two argument form, the second expression specifies a code that determines the form of the result.
 * In the three-argument form
   * The second expression is a code that specifies the character set or base of the first argument.
-  * The third expression is a code that specifies the character set or base of the result. If the expression does not evaluate to one of the defined codes, $ZCONVERT() generates a run-time argument. The three-argument form for character set conversion is supported only inUTF-8 mode.
+  * The third expression is a code that specifies the character set or base of the result. If the expression does not evaluate to one of the defined codes, $ZCONVERT() generates a run-time argument. The three-argument form for character set conversion is supported only in UTF-8 mode.
 
-$ZCONVERT() generates a run-time error if the second or third expression is not a valid code or a supported base. Valid bases are case-insensitive :code"`"DEC"` and :code:`"HEX"`. The valid (case insensitive) character codes for expr2 in the two-argument form are:
+$ZCONVERT() generates a run-time error if the second or third expression is not a valid code or a supported base. Valid bases are case-insensitive :code:`"DEC"` and :code:`"HEX"`. The valid (case insensitive) character codes for expr2 in the two-argument form are:
 
 * U converts the string to UPPER-CASE. "UPPER-CASE" refers to words where all the characters are converted to their "capital letter" equivalents. $ZCONVERT() retains characters already in UPPER-CASE "capital letter" form unchanged.
 * L converts the string to lower-case. "lower-case" refers to words where all the letters are converted to their "small letter" equivalents. $ZCONVERT() retains characters already in lower-case or having no lower-case equivalent unchanged.
