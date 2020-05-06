@@ -1,3 +1,14 @@
+.. ###############################################################
+.. #                                                             #
+.. # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+.. # All rights reserved.                                        #
+.. #                                                             #
+.. #     This source code contains the intellectual property     #
+.. #     of its copyright holder(s), and is made available       #
+.. #     under a license.  If you do not know the terms of       #
+.. #     the license, please stop and do not read further.       #
+.. #                                                             #
+.. ###############################################################
 
 .. index::
    Global Directory Editor
@@ -62,6 +73,9 @@ The input to GDE can be a command file. In a production environment, YottaDB rec
 
 .. note::
    A global directory stores database attributes and mapping rules. Processes use mapping rules to determine which database file contains a global variable node. MUPIP CREATE uses database attributes to create new database file(s). Once MUPIP CREATE applies the database attributes to create a database file, YottaDB does not use the attributes until the next MUPIP CREATE. If you use MUPIP SET (or DSE) to change the attributes of a database file, always perform an equivalent change to any global directory used for a subsequent MUPIP CREATE. Conversely, if you change attributes with GDE, existing database files must be explicitly changed with MUPIP SET or DSE.
+
+After opening a global directory file created with an older version of YottaDB and hence in an older format, or in a version of the upstream code (GT.M) in a big-endian format, simply opening the global directory and exiting with the `EXIT command <#exit>`_ upgrades the global directory to the current version of YottaDB's little-endian format. If you inadvertently open a global directory that you do not wish to upgrade, exit with the `QUIT command <#quit>`_
+
 
 +++++++++++++++++++++++++++++++++++++++++
 Identifying the Current Global Directory
