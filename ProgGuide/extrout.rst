@@ -753,7 +753,7 @@ ydb_zstatus
 
 This function returns the null-terminated $ZSTATUS message of the last failure via the buffer pointed by msg_buffer of size buf_len. The message is truncated to size buf_len if it does not fit into the buffer. ydb_zstatus() is useful if the external application needs the text message corresponding to the last YottaDB failure. A buffer of 2048 is sufficient to fit in any YottaDB message.
 
-Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_, ydb_zstatus() has an :code:`int` return value with a value of YDB_ERR_INVSTRLEN if the buffer supplied is not large enough to hold the message and YDB_OK otherwise. As with other YDB_ERR_INVSTRLEN return codes, ydb_zstatus() copies what can be copied to the buffer (including a null terminator byte) if the length is non-zero.
+Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_, ydb_zstatus() has an :code:`int` return value with a value of YDB_ERR_INVSTRLEN if the buffer supplied is not large enough to hold the message and YDB_OK otherwise. ydb_zstatus() copies what can be copied to the buffer (including a null terminator byte) if the length is non-zero.
 
 **Exit from YottaDB**
 

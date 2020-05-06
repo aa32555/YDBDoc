@@ -828,9 +828,9 @@ The format code is any one of the following:
 
 2. GO - Global Output format, used for files to transport or archive. -FORMAT=GO stores the data in record pairs. Each global node produces two records - the first contains the key and the second contains the value. GO format is only supported in M mode.
 
-3. ZWR - ZWRITE format, used for files to transport or archive that may contain non-graphical information. Each global node produces one record with both a key and data. Note that for non-ASCII data, M mode and UTF-8 mode extracts can differ, as the definition of printble characters differs.
+3. ZWR - ZWRITE format, used for files to transport or archive that may contain non-graphical information. Each global node produces one record with both a key and data. Note that for non-ASCII data, M mode and UTF-8 mode extracts can differ, as the definition of printable characters differs.
 
-GO and ZWR format output files have two header records. The first is a text label (refer to the LABEL qualifier), defaulting to: :code:`"YottaDB MUPIP EXTRACT"` followed by the command line used to generate the extract, including the full path to the mupip executable, followed by UTF-8 if the process ran in UTF-8 mode; the second is the date and time of extract in $ZDATE() format DD-MON-YEAR 24:60:SS, and, for ZWR extracts, the text :code:`"ZWR"`.
+GO and ZWR format output files have two header records. The first is a text label (refer to the `LABEL qualifier <#label>`_), defaulting to: :code:`"YottaDB MUPIP EXTRACT"` followed by the command line used to generate the extract, including the full path to the mupip executable, followed by UTF-8 if the process ran in UTF-8 mode; the second is the date and time of extract in $ZDATE() format DD-MON-YEAR 24:60:SS, and, for ZWR extracts, the text :code:`"ZWR"`.
 
 .. note::
    ZWR format is suitable for all data. Use GO format for data that contains only printable characters and spaces, as some characters (such as linefeed) can corrupt the output file format.

@@ -2491,7 +2491,7 @@ This example invokes %FREECNT at the YDB> prompt that displays the number of fre
   4. For those structures supported by the $ZPEEK() function that do not accept an argument, this second expression must be NULL or not specified.
 
 * The optional third expression specifies the output format in one character as defined in the "format" argument in the $ZPEEK() documentation. This argument overrides the automatic format detection by the %PEEKBYNAME utility.
-* The optional fourth agument is a global directory for accessing the :code:`gtmhelp.gld` for accesssing the :code:`gtmhelp.dat` file.
+* The optional fourth agument is a global directory referencing the :code:`gtmhelp.gld` for accesssing the :code:`gtmhelp.dat` file.
 
 Example:
 

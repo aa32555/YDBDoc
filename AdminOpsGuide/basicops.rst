@@ -349,7 +349,7 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 **ydb_dmterm** (gtm_dmterm) specifies a [NO]DMTERM state at process initiation where application setting applied to $PRINCIPAL also apply to direct mode interactions; a case-insensitive value of "1", "yes", or "true" establishes a DMTERM state at process initiation where direct mode uses default terminal characteristics and ignores application settings for $PRINCIPAL; all other values, including no value, result in the default VIEW "NODMTERM" behavior.
 
-**ydb_env_translate** (gtm_env_translate) specifies the path to a shared library to implement the optional YottaDB `environment translation facility <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#optional-yottadb-environment-translation-facility>` _ that can assist in resolving extended global references, to assist in application portability across platforms.
+**ydb_env_translate** (gtm_env_translate) specifies the path to a shared library to implement the optional YottaDB `environment translation facility <https://docs.yottadb.com/ProgrammersGuide/langfeat.html#optional-yottadb-environment-translation-facility>`_ to aid application portability across platforms by translating strings into global directory references.
 
 **ydb_error_on_jnl_file_lost** (gtm_error_on_jnl_file_lost) causes a runtime error when set to 1 in case of problems with journaling (disk space issues etc.). Setting this environment variable to 0 (or having it undefined) is the default behavior which is to turn off journaling in case of problems.
 
@@ -364,7 +364,7 @@ All values are case-independent. When ydb_autorelink_keeprtn is defined and TRUE
 
 **ydb_gbldir** (gtmgbldir) specifies the initial value of the $ZGBLDIR ISV. $ZGBLDIR identifies the global directory. A global directory maps global variables to physical database files, and is required to access M global variables. Users who maintain multiple global directories use this environment variable to conveniently choose one to use from the time of process startup. To automate this definition, define ydb_gbldir in the user's login file. The SET command can alter the value of $ZGBLDIR in an active process.
 
-**ydb_gbldir_translate** provides the path to a shared library to allow a set to $ZGBLDIR to be transformed for application portability across platforms. This is similar to the the optional YottaDB environment translation facility provided by **ydb_env_translate** above. ydb_gbldir_translate was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
+**ydb_gbldir_translate** provides the path to a shared library to allow a set of $ZGBLDIR to be transformed for application portability across platforms. This is similar to the the optional YottaDB environment translation facility provided by **ydb_env_translate** above. ydb_gbldir_translate was added effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_.
 
 **ydb_gdscert** (gtm_gdscert) specifies the initial setting that controls whether YottaDB processes should test updated database blocks for structural damage. If it is defined, and evaluates to a non-zero integer or any case-independent string or leading substrings of "TRUE" or "YES", YottaDB performs a block-level integrity check on every block as a process commits it. Within a running process, VIEW "GDSCERT":value controls this setting. By default, YottaDB does not check database blocks for structural damage, because the impact on performance is usually unwarranted.
 

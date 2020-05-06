@@ -1064,8 +1064,6 @@ The format for the $RANDOM function is:
 
 $RANDOM() results fall between zero (0) and one less than the argument. $RANDOM() provides a tool for generating pseudo-random patterns useful in testing or statistical calculations. You should ensure that the statistical properties of $RANDOM() are adequate for your application needs.
 
-Effective release `r1.30. <https://gitlab.com/YottaDB/DB/YDB/-/tags/r1.30>`_ $RANDOM() is faster and produces higher quality random numbers than it did previously.
-
 .. note::
    $RANDOM() should never be used when cryptographic quality random numbers are needed.
 
@@ -2184,13 +2182,16 @@ The format for the $ZCONVERT() function is:
 * In the two argument form, the second expression specifies a code that determines the form of the result.
 * In the three-argument form
   * The second expression is a code that specifies the character set or base of the first argument.
-  * The third expression is a code that specifies the character set or base of the result. If the expression does not evaluate to one of the defined codes $ZCONVERT() generates a run-time argument. The three-argument form is not supported in M mode.
+  * The third expression is a code that specifies the character set or base of the result. If the expression does not evaluate to one of the defined codes, $ZCONVERT() generates a run-time argument. The three-argument form for character set conversion is supported only inUTF-8 mode.
 
-$ZCONVERT() generates a run-time error if the second or third expression is not valid code or a supported base. Valid bases are case-insensitive :code"`"DEC"` and :code:`"HEX"`. The valid (case insensitive) character codes for expr2 in the two-argument form are:
+$ZCONVERT() generates a run-time error if the second or third expression is not a valid code or a supported base. Valid bases are case-insensitive :code"`"DEC"` and :code:`"HEX"`. The valid (case insensitive) character codes for expr2 in the two-argument form are:
 
 * U converts the string to UPPER-CASE. "UPPER-CASE" refers to words where all the characters are converted to their "capital letter" equivalents. $ZCONVERT() retains characters already in UPPER-CASE "capital letter" form unchanged.
 * L converts the string to lower-case. "lower-case" refers to words where all the letters are converted to their "small letter" equivalents. $ZCONVERT() retains characters already in lower-case or having no lower-case equivalent unchanged.
 * T converts the string to title case. "Title case" refers to a string with the first character of each word in upper-case and the remaining characters in the lower-case. $ZCONVERT() retains characters already conforming to "Title case" unchanged. "T" (title case) is not supported in M mode.
+
+.. note::
+   When UTF-8 mode is enabled, YottaDB uses the ICU Library to perform case conversion. As mentioned in the Theory of Operation section, the case conversion of the strings occurs according to Unicode code-point values. This may not be the linguistically or culturally correct case conversion. Therefore, you must ensure that the actual case conversion is linguistically and culturally correct for your specific needs. The two-argument form of the $ZCONVERT() function in M mode does not use the ICU Library to perform operations related to the case conversion of the strings.
 
 The valid (case insensitive) codes for character set encoding for expr2 and expr3 in the three-argument form are:
 
@@ -2199,18 +2200,15 @@ The valid (case insensitive) codes for character set encoding for expr2 and expr
 * "UTF-16BE"-- a multi-byte 16-bit Unicode® encoding form in big-endian.
 * "UTF-16"-- a multi-byte 16-bit Unicode® encoding form which uses the same endian level as that of the current system.
 
+.. note::
+   As YottaDB Unicode support uses UTF-8, and not other encodings, invoking functions such as $LENGTH() on UTF-16 strings are likely to result in BADCHAR errors. Conversion to and from UTF-16 encodings exists primarily to support input and output of UTF-16 data.
+
 For numeric conversion:
 
 * Unsigned numbers in the range 0 through 0xFFFFFFFFFFFFFFFF (64-bit unsigned integers) can be converted. Decimal return values greater than 999999999999999999 (18 decimal digits, YottaDB's maximum numeric size) are returned as strings.
 * Hexadecimal numbers are always converted to positive decimal numbers.
 * As conversion from hexadecimal numbers preceded by "-" to decimal is not considered meaningful, if the number to be converted is a “negative” hexadecimal number (e.g., "-F"), the result is 0.
 * Conversion from negative decimal numbers to hexadecimal returns the hexadecimal value of the 2's complement of the number, e.g., the value of $ZCONVERT(-23,"DEC","HEX") is "E9"
-
-.. note::
-   When UTF-8 mode is enabled, YottaDB uses the ICU Library to perform case conversion. As mentioned in the Theory of Operation section, the case conversion of the strings occurs according to Unicode code-point values. This may not be the linguistically or culturally correct case conversionTherefore, you must ensure that the actual case conversion is linguistically and culturally correct for yourspecific needs. The two-argument form of the $ZCONVERT() function in M mode does not use the ICU Library to perform operation related to the case conversion of the strings.
-
-.. note::
-   As YottaDB Unicode support uses UTF-8, and not other encodings, invoking functions such as $LENGTH() on UTF-16 strings are likely to result in BADCHAR errors. Conversion to and from UTF-16 encodings exists primarily to support input and output of UTF-16 data.
 
 ++++++++++++++++++++++++
 Examples of $ZCONVERT()
@@ -2616,7 +2614,7 @@ The optional expr1 argument is a template output device specification. It can be
 
 The $ZJOBEXAM()does not trigger error processing except when there is a problem storing its return value, so no error is reported to the process until after any dump is complete. In the event of any error encountered during the $ZJOBEXAM(), YottaDB sends an appropriate message to operator log facility and returns control to the caller. Note that this special error handling applies only to the $ZJOBEXAM(), and is not a property of the $ZINTERRUPT interrupt handler, which uses $ZJOBEXAM() by default.
 
-Defaulting to :code:`"*"`, expr2 specifies the `ZSHOW output codes <./commands.html#zshow-information-codes>`_ of data to be included in the output. To specify expr2 while allowing expr1 to default, specify :code:`""` as the value of expr1.
+Defaulting to :code:`"*"`, expr2 specifies the `ZSHOW output codes <./commands.html#zshow-information-codes>`_ of data to be included in the output. To specify expr2 while allowing expr1 to default, specify :code:`""` as the value of expr1. Invalid codes in expr2 are ignored, and can result in empty dump files.
 
 .. note::
    As ZSHOW output files contain process-internal data that may include confidential information, e.g., in local variables, ensure that output files have access protection appropriate to their content.
@@ -3084,7 +3082,7 @@ Sends a signal to a process. The format for the $ZSIGPROC function is:
    $ZSIGPROC(expr1,expr2)
 
 * The first expression is the pid of the process to which the signal is to be sent.
-* The second expression is the system signal name (e.g., :code:`"SIGUSR1"` or just :code:`"USR1"` - YottaDB accepts either) or number. YottaDB recommends using signal names to maintain code portability across different platforms.
+* The second expression is the system signal name (e.g., :code:`"SIGUSR1"` or just :code:`"USR1"` - YottaDB accepts either) or number (e.g., 10 for SIGUSR1). YottaDB recommends using signal names to maintain code portability across different platforms.
 
 If the second expression is 0, $ZSIGPROC() checks the validity of the pid specified in the first expression.
 
@@ -3532,7 +3530,7 @@ Example:
 $ZYHASH()
 -----------------
 
-Returns the 128-bit `MurmurHash3 <https://en.wikipedia.org/wiki/MurmurHash#MurmurHash3>`_ of a string as a hexadecimal string prefixed with :code:"0x". This is equivalent to calling the C API function `ydb_mmrhash128() <../cprogram.html#ydb-mmrhash-128>`_ and passing its return value to `ydb_mmrhash128_hex() <../cprogram.html#ydb-mmrhash-128-hex>`_
+Returns the 128-bit `MurmurHash3 <https://en.wikipedia.org/wiki/MurmurHash#MurmurHash3>`_ of a string as a hexadecimal string prefixed with :code:"0x". This is equivalent to calling the C API function `ydb_mmrhash_128() <../MultiLangProgGuide/cprogram.html#ydb-mmrhash-128>`_ and passing its return value to `ydb_mmrhash_128_hex() <../MultiLangProgGuide/cprogram.html#ydb-mmrhash-128-hex>`_
 
 .. parsed-literal::
    $ZYHASH(string[,salt])

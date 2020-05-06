@@ -635,7 +635,7 @@ $ZG[BLDIR] contains the value of the current Global Directory filename. When $ZG
 
 YottaDB initializes $ZGBLDIR to the translation of the environment variable ydb_gbldir. The value of the ydb_gbldir environment variable may include a reference to another environment variable. If ydb_gbldir is not defined, YottaDB initializes $ZGBLDIR to the value of the environment variable gtm_gbldir, and if that is not defined, then to null. When $ZGBLDIR is null, YottaDB constructs a file name for the Global Directory using the string $ydb_gbldir and the extension .gld in the current working directory.
 
-$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR using the same logic as at process startup. NEWing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. A $ZGBLDIR value may include an environment variable.
+$ZGBLDIR is a read-write Intrinsic Special Variable, (i.e., it can appear on the left side of the equal sign (=) in the argument to the SET command). SET $ZGBLDIR="" causes YottaDB to assign $ZGBLDIR using the same logic as at process startup. NEWing $ZGBLDIR is the same as SET $ZGBLDIR="", which as just noted may change its value. As with NEWed local variables, QUIT restores the prior value in effect at the time of call. A $ZGBLDIR value may include an environment variable.
 
 SETting $ZGBLDIR also causes YottaDB to attempt to open the specified file. If the file name is invalid or the file is inaccessible, YottaDB triggers an error without changing the value of $ZGBLDIR.
 
@@ -1782,7 +1782,7 @@ Example:
 
 .. parsed-literal::
    YDB>write $zversion
-   GT.M V6.0-003 Linux x86_64
+   GT.M V6.3-008 Linux x86_64
 
 This example displays the current version identifier for GT.M.
 
