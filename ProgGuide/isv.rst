@@ -2042,5 +2042,3 @@ The code in SFeeplnACN50.m handles changes to piece 15.
      . Kill ^XREF("FEEPLN",oldfeepln,cid) Set ^XREF("FEEPLN",feepln,cid)=""
      Quit
 
-
-
