@@ -1062,7 +1062,7 @@ The format for the $RANDOM function is:
 * If $RANDOM() has an argument less than one (1), it generates a run-time error.
 * $RANDOM can generate numbers up to 2147483646 (that is 2GB - 2).
 
-$RANDOM() results fall between zero (0) and one less than the argument. $RANDOM() provides a tool for generating pseudo-random patterns useful in testing or statistical calculations. You should ensure that the statistical properties of $RANDOM() are adequate for your application needs.
+$RANDOM() returns an integer between zero (0) and one less than the argument. $RANDOM() provides a tool for generating pseudo-random patterns useful in testing or statistical calculations. You should ensure that the statistical properties of $RANDOM() are adequate for your application needs.
 
 .. note::
    $RANDOM() should never be used when cryptographic quality random numbers are needed.
