@@ -220,11 +220,13 @@ A comprehensive list of environment variables that are directly or indirectly us
 +++++++++
 EDITOR
 +++++++++
+
 **EDITOR** is a standard system environment variable that specifies the full path to the editor to be invoked by YottaDB in response to the ZEDit command (defaults to vi, if $EDITOR is not set).
 
 +++++++++++
 LC_CTYPE
 +++++++++++
+
 **LC_CTYPE** is a standard system environment variable used to specify a locale. When $ydb_chset has the value "UTF-8", $LC_CTYPE must specify a UTF-8 locale (e.g., "en_US.utf8").
 
 +++++++++
