@@ -1,7 +1,7 @@
 #!/bin/bash
  ###############################################################
  #                                                             #
- # Copyright (c) 2020 YottaDB LLC and/or its subsidiaries.     #
+ # Copyright (c) 2021 YottaDB LLC and/or its subsidiaries.     #
  # All rights reserved.                                        #
  #                                                             #
  #     This source code contains the intellectual property     #
@@ -65,9 +65,9 @@ done
 cp index.html "$target"
 
 # Build the documentation from other repositories
-pushd "$octo"/doc
-make html
-rsync _build/html/ "$target/Octo"
+pushd "$octo"/tools/ci
+./docs.sh
+rsync public/ "$target/Octo"
 popd
 
 pushd "$posix"/doc
