@@ -170,7 +170,7 @@ ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any
    YottaDB continues to support xc_* equivalent types of ydb_* for upward compatibility. gtmxc_types.h explicitly marks the xc_* equivalent types as deprecated.
 
 * Parameter-types that interface YottaDB with non-M code using C calling conventions must match the data-types on their target platforms. Note that most addresses on 64-bit platforms are 8 bytes long and require 8 byte alignment in structures whereas all addresses on 32-bit platforms are 4 bytes long and require 4-byte alignment in structures.
-* Though strings with embedded zeroes are sent as input to external routines, embedded zeroes in output (or return value) strings of type ydb_char_t may cause string truncation because they are treated as terminators.
+* Though strings with embedded NULL characters are sent as input to external routines, embedded NULL characters in output (or return value) strings of type ydb_char_t may cause string truncation because they are treated as terminators.
 * If your interface uses ydb_long_t or ydb_ulong_t types but your interface code uses int or signed int types, failure to revise the types so they match on a 64-bit platform will cause the code to fail in unpleasant, potentially dangerous and hard to diagnose ways.
 
 The first parameter of each called routine is an int (for example, int argc in decrement.c and increment.c) that specifies the number of parameters passed. This parameter is implicit and only appears in the called routine. It does not appear in the call table specification, or in the M invocation. If there are no explicit parameters, the call table specification will have a zero (0) value because this value does not include itself in the count. If there are fewer actual parameters than formal parameters, the call is determined from the parameters specified by the values supplied by the M program. The remaining parameters are undefined. If there are more actual parameters than formal parameters, YottaDB reports an error.
@@ -688,7 +688,7 @@ The variable argument function ydb_ci() is the interface that actually invokes a
 
 First argument: c_call_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
 
-Second argument (only to be supplied <ret-type> is not void): ret_val, a pre-allocated pointer through which YottaDB returns the value of QUIT argument from the (extrinsic) M routine. ret_val must be the same type as specified for <ret-type> in the Call-In table entry.
+Second argument (only to be supplied if <ret-type> is not void): ret_val, a pre-allocated pointer through which YottaDB returns the value of QUIT argument from the (extrinsic) M routine. ret_val must be the same type as specified for <ret-type> in the Call-In table entry.
 
 List of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. **Note that passing the same number of arguments as the number of arguments in the Call-in table can cause undefined behavior, as the remaining arguments are picked up from uninitialized memory locations in the C stack!** All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
@@ -752,9 +752,9 @@ The ydb_cip() call must follow the following format:
 
 First argument: ci_name_descriptor, as described above, within which rtn_name indicates the alias name for the corresponding <lab-ref> entry in the Call-In table.
 
-Optional second argument: ret_val, a pre-allocated pointer through which YottaDB returns the value of QUIT argument from the (extrinsic) M routine. ret_val must be the same type as specified for <ret-type> in the Call-In table entry. The ret_val argument is needed if and only if <ret-type> is not void.
+Second argument (only to be supplied if <ret-type> is not void): ret_val, a pre-allocated pointer through which YottaDB returns the value of QUIT argument from the (extrinsic) M routine. ret_val must be the same type as specified for <ret-type> in the Call-In table entry.
 
-Optional list of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
+List of arguments to be passed to the M routine's formallist: the number of arguments and the type of each argument must match the number of parameters, and parameter types specified in the corresponding Call-In table entry. **Note that passing the same number of arguments as the number of arguments in the Call-in table can cause undefined behavior, as the remaining arguments are picked up from uninitialized memory locations in the C stack!** All pointer arguments must be pre-allocated. YottaDB assumes that any pointer, which is passed for O/IO-parameter points to valid write-able memory.
 
 The status value returned by ydb_cip() indicates the YottaDB status code: zero (0) if successful, or a non-zero error code on failure. The error message corrsponding to the failure code can be read into a buffer by immediately calling ydb_zstatus().
 
