@@ -105,31 +105,33 @@ Legal directions are I, O, or IO for input, output, or input/output, respectivel
 
 The following table describes the legal types defined in the C header file $ydb_dist/libyottadb.h:
 
-+++++++++++++
-Type: Usage
-+++++++++++++
-
-Void: Specifies that the function does not return a value.
-
-ydb_status_t : Type int. If the function returns zero (0), then the call was successful. If it returns a non-zero value, YottaDB will signal an error upon returning to M.
-
-ydb_long_t : 32-bit signed integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.
-
-ydb_ulong_t : 32-bit unsigned integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.
-
-ydb_long_t* : For passing a pointer to long [integers].
-
-ydb_float_t* : For passing a pointer to floating point numbers.
-
-ydb_double_t* : Same as above, but double precision.
-
-ydb_char_t*: For passing a "C" style string - null terminated.
-
-ydb_char_t** : For passing a pointer to a "C" style string.
-
-ydb_string_t* : For passing a structure in the form {int length;char \*address}. Useful for moving blocks of memory to or from YottaDB.
-
-ydb_pointertofunc_t : For passing callback function pointers. For details see :ref:`callback-mech`.
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| Type                  | Usage                                                                                                    |
++=======================+==========================================================================================================+
+| void                  | Specifies that the function does not return a value.                                                     |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_status_t          | Type int. If the function returns zero (0), then the call was successful. If it returns a non-zero value,|
+|                       | YottaDB will signal an error upon returning to M.                                                        |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_long_t            | 32-bit signed integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.                 |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_ulong_t           | 32-bit unsigned integer on 32-bit platforms and 64-bit signed integer on 64-bit platforms.               |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_long_t*           | For passing a pointer to long [integers].                                                                |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_float_t*          | For passing a pointer to floating point numbers.                                                         |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_double_t*         | Same as above, but double precision.                                                                     |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_char_t*           | For passing a "C" style string - null terminated.                                                        |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_char_t**          | For passing a pointer to a "C" style string.                                                             |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_string_t*         | For passing a structure in the form {int length;char \*address}. Useful for moving blocks of memory to or|
+|                       | from YottaDB.                                                                                            |
++-----------------------+----------------------------------------------------------------------------------------------------------+
+| ydb_pointertofunc_t   | For passing callback function pointers. For details see :ref:`callback-mech`.                            |
++-----------------------+----------------------------------------------------------------------------------------------------------+
 
 .. note::
    If an external call's function argument is defined in the external call table, YottaDB allows invoking that function without specifying a value of the argument. All non-trailing and output-only arguments which do not specify a value translate to the following default values in C:
@@ -146,26 +148,6 @@ In the mathpak package example, the following invocation translate inval to the 
 
 If an external call's function argument is defined in the external call table and that function is invoked without specifying the argument, ensure that the external call function appropriately handles the missing argument. As a good programming practice, always ensure that count of arguments defined in the external call table matches the function invocation.
 
-libyottadb.h also includes definitions for the following entry points exported from libyottadb:
-
-.. code-block:: C
-
-   void ydb_hiber_start(ydb_uint_t mssleep);
-   void ydb_hiber_start_wait_any(ydb_uint_t mssleep)
-   void ydb_start_timer(ydb_tid_t tid, ydb_int_t time_to_expir, void (*handler)(), ydb_int_t hdata_len, void *hdata);
-   void ydb_cancel_timer(ydb_tid_t tid);
-
-where:
-
-* mssleep - milliseconds to sleep
-* tid - unique timer id value
-* time_to_expir - milliseconds until timer drives given handler
-* handler - function pointer to handler to be driven
-* hdata_len - 0 or length of data to pass to handler as a parameter
-* hdata - NULL or address of data to pass to handler as a parameter
-
-ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any() sleeps until the time expires or an interrupt by any signal (including another timer). ydb_start_timer() starts a timer but returns immediately (no sleeping) and drives the given handler when time expires unless the timer is canceled.
-
 .. note::
    YottaDB continues to support xc_* equivalent types of ydb_* for upward compatibility. gtmxc_types.h explicitly marks the xc_* equivalent types as deprecated.
 
@@ -176,65 +158,6 @@ ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any
 The first parameter of each called routine is an int (for example, int argc in decrement.c and increment.c) that specifies the number of parameters passed. This parameter is implicit and only appears in the called routine. It does not appear in the call table specification, or in the M invocation. If there are no explicit parameters, the call table specification will have a zero (0) value because this value does not include itself in the count. If there are fewer actual parameters than formal parameters, the call is determined from the parameters specified by the values supplied by the M program. The remaining parameters are undefined. If there are more actual parameters than formal parameters, YottaDB reports an error.
 
 There may be only a single occurrence of the type ydb_status_t for each entryref.
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Database Encryption Extensions to the YottaDB External Interface
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-To support Database Encryption, YottaDB provides a reference implementation which resides in $ydb_dist/plugin/gtmcrypt.
-
-The reference implementation includes:
-
-* A $ydb_dist/plugin/gtmcrypt sub-directory with all source files and scripts. The scripts include those needed to build/install libgtmcrypt.so and "helper" scripts, for example, add_db_key.sh (see below).
-* The plugin interface that YottaDB expects is defined in gtmcrypt_interface.h. Never modify this file - it defines the interface that the plugin must provide.
-* $ydb_dist/plugin/libgtmcrypt.so is the shared library containing the executables which is dynamically linked by YottaDB and which in turn calls the encryption packages. If the $ydb_dist/utf8 directory exists, then it should contain a symbolic link to ../plugin.
-* Source code is provided in the file $ydb_dist/plugin/gtmcrypt/source.tar which includes build.sh and install.sh scripts to respectively compile and install libgtmcrypt.so from the source code.
-
-To support the implementation of a reference implementation, YottaDB provides additional C structure types (in the libyottadb.h file):
-
-* gtmcrypt_key_t - a datatype that is a handle to a key. The YottaDB database engine itself does not manipulate keys. The plug-in keeps the keys, and provides handles to keys that the YottaDB database engine uses to refer to keys.
-* xc_fileid_ptr_t - a pointer to a structure maintained by YottaDB to uniquely identify a file. Note that a file may have multiple names - not only as a consequence of absolute and relative path names, but also because of symbolic links and also because a file system can be mounted at more than one place in the file name hierarchy. YottaDB needs to be able to uniquely identify files.
-
-Although not required to be used by a customized plugin implementation, YottaDB provides (and the reference implementation uses) the following functions for uniquely identifying files:
-
-* xc_status_t ydb_filename_to_id(xc_string_t \*filename, xc_fileid_ptr_t \*fileid) - function that takes a file name and provides the file id structure for that file.
-* xc_status_t ydb_is_file_identical(xc_fileid_ptr_t fileid1, xc_fileid_ptr_t fileid2) - function that determines whether two file ids map to the same file.
-* ydb_xcfileid_free(xc_fileid_ptr_t fileid) - function to release a file id structure.
-
-M, MUPIP and DSE processes dynamically link to the plugin interface functions that reside in the shared library. The functions serve as software "shims" to interface with an encryption library such as libmcrypt or libgpgme/libgcrypt.
-
-The plugin interface functions are:
-
-* gtmcrypt_init()
-* gtmcrypt_getkey_by_name()
-* gtmcrypt_getkey_by_hash()
-* gtmcrypt_hash_gen()
-* gtmcrypt_encode()
-* gtmcrypt_decode()
-* gtmcrypt_close()
-* and gtmcrypt_strerror()
-
-A YottaDB database consists of multiple database files, each of which has its own encryption key, although you can use the same key for multiple files. Thus, the gtmcrypt* functions are capable of managing multiple keys for multiple database files. Prototypes for these functions are in gtmcrypt_interface.h.
-
-The core plugin interface functions, all of which return a value of type ydb_status_t are:
-
-* gtmcrypt_init() performs initialization. If the environment variable $ydb_passwd exists and has an empty string value, YottaDB calls gtmcrypt_init() before the first M program is loaded; otherwise it calls gtmcrypt_init() when it attempts the first operation on an encrypted database file.
-* Generally, gtmcrypt_getkey_by_hash or, for MUPIP CREATE, gtmcrypt_getkey_by_name perform key acquisition, and place the keys where gtmcrypt_decode() and gtmcrypt_encode() can find them when they are called.
-* Whenever YottaDB needs to decode a block of bytes, it calls gtmcrypt_decode() to decode the encrypted data. At the level at which YottaDB database encryption operates, it does not matter what the data is - numeric data, string data whether in M or UTF-8 mode and whether or not modified by a collation algorithm. Encryption and decryption simply operate on a series of bytes.
-* Whenever YottaDB needs to encode a block of bytes, it calls gtmcrypt_encode() to encode the data.
-* If encryption has been used (if gtmcrypt_init() was previously called and returned success), YottaDB calls gtmcrypt_close() at process exit and before generating a core file. gtmcrypt_close() must erase keys in memory to ensure that no cleartext keys are visible in the core file.
-
-More detailed descriptions follow.
-
-* gtmcrypt_key_t \*gtmcrypt_getkey_by_name(ydb_string_t \*filename) - MUPIP CREATE uses this function to get the key for a database file. This function searches for the given filename in the memory key ring and returns a handle to its symmetric cipher key. If there is more than one entry for the given filename , the reference implementation returns the entry matching the last occurrence of that filename in the master key file.
-* ydb_status_t gtmcrypt_hash_gen(gtmcrypt_key_t \*key, ydb_string_t \*hash) - MUPIP CREATE uses this function to generate a hash from the key then copies that hash into the database file header. The first parameter is a handle to the key and the second parameter points to 256 byte buffer. In the event the hash algorithm used provides hashes smaller than 256 bytes, gtmcrypt_hash_gen() must fill any unused space in the 256 byte buffer with zeros.
-* gtmcrypt_key_t \*gtmcrypt_getkey_by_hash(ydb_string_t \*hash) - YottaDB uses this function at database file open time to obtain the correct key using its hash from the database file header. This function searches for the given hash in the memory key ring and returns a handle to the matching symmetric cipher key. MUPIP LOAD, MUPIP RESTORE, MUPIP EXTRACT, MUPIP JOURNAL and MUPIP BACKUP -BYTESTREAM all use this to find keys corresponding to the current or prior databases from which the files they use for input were derived.
-* ydb_status_t gtmcrypt_encode(gtmcrypt_key_t \*key, ydb_string_t \*inbuf, ydb_string_t \*outbuf) and ydb_status_t gtmcrypt_decode(gtmcrypt_key_t \*key, ydb_string_t \*inbuf, ydb_string_t \*outbuf)- YottaDB uses these functions to encode and decode data. The first parameter is a handle to the symmetric cipher key, the second is a pointer to the block of data to encode or decode, and the third is a pointer to the resulting block of encoded or decoded data. Using the appropriate key (same key for a symmetric cipher), gtmcrypt_decode() must be able to decode any data buffer encoded by gtmcrypt_encode(), otherwise the encrypted data is rendered unrecoverable. As discussed earlier, YottaDB requires the encrypted and cleartext versions of a string to have the same length.
-* char \*gtmcrypt_strerror() - YottaDB uses this function to retrieve addtional error context from the plug-in after the plug-in returns an error status. This function returns a pointer to additional text related to the last error that occurred. YottaDB displays this text as part of an error report. In a case where an error has no additional context or description, this function returns a null string.
-
-The complete source code for reference implementations of these functions is provided, licensed under the same terms as YottaDB. You are at liberty to modify them to suit your specific YottaDB database encryption needs.
-
-For more information and examples, refer to `Database Encryption <../AdminOpsGuide/encryption.html>`_ in the Administration and Operations Guide.
 
 ++++++++++++++++++++++++++++++++++++
 Pre-allocation of Output Parameters
@@ -258,8 +181,29 @@ Specification of a pre-allocation value should follow these rules:
 +++++++++++++++++++++++++++++
 Callback Mechanism
 +++++++++++++++++++++++++++++
-
 YottaDB exposes certain functions that are internal to the YottaDB runtime library for the external calls via a callback mechanism. While making an external call, YottaDB populates and exposes a table of function pointers containing addresses to call-back functions.
+
+Some of these callbacks (not all) can be linked at compilation time by including libyottadb.h. A fuller set can be discovered at runtime by a mechanism described after the table below.
+
+libyottadb.h includes definitions for the following entry points exported from libyottadb:
+
+.. code-block:: C
+
+   void ydb_hiber_start(ydb_uint_t mssleep);
+   void ydb_hiber_start_wait_any(ydb_uint_t mssleep)
+   void ydb_start_timer(ydb_tid_t tid, ydb_int_t time_to_expir, void (*handler)(), ydb_int_t hdata_len, void *hdata);
+   void ydb_cancel_timer(ydb_tid_t tid);
+
+where:
+
+* mssleep - milliseconds to sleep
+* tid - unique timer id value
+* time_to_expir - milliseconds until timer drives given handler
+* handler - function pointer to handler to be driven
+* hdata_len - 0 or length of data to pass to handler as a parameter
+* hdata - NULL or address of data to pass to handler as a parameter
+
+ydb_hiber_start() always sleeps until the time expires; ydb_hiber_start_wait_any() sleeps until the time expires or an interrupt by any signal (including another timer). ydb_start_timer() starts a timer but returns immediately (no sleeping) and drives the given handler when time expires unless the timer is canceled.
 
 +----------+---------------------+--------------------+--------------------+-------------------------------------------------------------------------------------------+
 | Index    | Function            | Argument           | Type               | Description                                                                               |
@@ -588,7 +532,9 @@ ydb_int64_6 and ydb_uint64_t are supported on 64-bit platforms effective release
 Call-In table
 ~~~~~~~~~~~~~~~
 
-The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, the environment variable ydb_ci must be defined to point to the Call-In table file path. Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
+The Call-In table file is a text file that contains the signatures of all M label references that get called from C. In order to pass the typed C arguments to the type-less M formallist, either the environment variable ydb_ci must be defined to point to the Call-In table file path, or you can use the functions :code:`ydb_ci_tab_open()`/:code:`ydb_ci_tab_open_t()` with :code:`ydb_ci_tab_switch()`/:code:`ydb_ci_tab_switch_t()` to open and switch call-in tables. Usage for the functions to open and switch the tables is described below.
+
+Each signature must be specified separately in a single line. YottaDB reads this file and interprets each line according to the following convention (specifications within box brackets "[]", are optional):
 
 .. code-block:: none
 
@@ -639,21 +585,51 @@ Here is an example of Call-In table (ydb_access.ci) for _ydbaccess.m (see :ref:`
 Call-In Interface
 ++++++++++++++++++++++++
 
-This section is further broken down into 6 subsections for an easy understanding of the Call-In interface. The section is concluded with an elaborate example.
+This section is further broken down into several subsections for an easy understanding of the Call-In interface. The section is concluded with an elaborate example.
 
-~~~~~~~~~~~~~~~~~~~~
-Initialize YottaDB
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ydb_ci_tab_open() / ydb_ci_tab_open_t()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: C
 
-   ydb_status_t ydb_init(void);
+        int ydb_ci_tab_open(char *fname, uintptr_t *ret_value)
 
-If the base program is not an M routine but a standalone C program, ydb_init() must be called (before calling any YottaDB functions), to initialize the YottaDB run-time system.
+        int ydb_ci_tab_open_t(uint64_t tptoken,
+                ydb_buffer_t *errstr, char *fname, uintptr_t *ret_value)
 
-ydb_init() returns zero (0) on success. On failure, it returns the YottaDB error status code whose message can be read into a buffer by immediately calling ydb_zstatus(). Duplicate invocations of ydb_init() are ignored by YottaDB.
+Opens the call-in table contained in the file name :code:`fname`. Using the filled in :code:`ret_value` handle in a later :code:`ydb_ci_tab_switch()/ydb_ci_tab_switch_t()` call, one can switch to this call-in table as the currently active call-in table. All calls to :code:`ydb_cip()/ydb_cip_t()/ydb_ci()/ydb_ci_t()` use the currently active call-in table. This lets applications open any number of call-in tables across the lifetime of a process. The :code:`ydb_ci` environment variable, if set, points to the default call-in table that YottaDB uses unless the active call-in table is switched using :code:`ydb_ci_tab_switch()/ydb_ci_tab_switch_t()`. The call-in table pointed to by :code:`ydb_ci`, the default call-in table, need not be explicitly opened with :code:`ydb_ci_tab_open()/ydb_ci_tab_open_t()`.
 
-If Call-Ins are used from an external call function (that is, a C function that has itself been called from M code), ydb_init() is not needed, because YottaDB is initialized before the External Call. All ydb_init() calls from External Calls functions are ignored by YottaDB.
+Returns:
+
+- :code:`YDB_OK` if the open was successful and fills in a handle to the opened table in :code:`ret_value`; or
+- :code:`YDB_ERR_PARAMINVALID` if the input parameters :code:`fname` or :code:`ret_value` are NULL; or
+- a negative error return code (for example, if the call-in table in the file had parse errors).
+
+See the `Threads <../MultiLangProgGuide/programmingnotes.html#threads>`_ section in the Multi-Language Programmer's Guide for information on using the threaded (:code:`_t`) version of the code.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ydb_ci_tab_switch() / ydb_ci_tab_switch_t()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: C
+
+        int ydb_ci_tab_switch(uintptr_t new_handle, uintptr_t *ret_old_handle)
+
+        int ydb_ci_tab_switch_t(uint64_t tptoken,
+                ydb_buffer_t *errstr, uintptr_t new_handle, uintptr_t *ret_old_handle)
+
+Switches the currently active call-in table to the handle :code:`new_handle` (returned by a previous call to :code:`ydb_ci_tab_open()/ydb_ci_tab_open_t()`) and fills in the previously active call-in table handle in :code:`*ret_old_handle`. An application that wishes to switch back to the previous call-in table at a later point would call :code:`ydb_ci_tab_switch()/ydb_ci_tab_switch_t()` again with :code:`*ret_old_handle` as the :code:`new_handle` parameter. The special value of NULL passed in :code:`new_handle` switches the active call-in table to the default call-in table (the call-in table pointed to by the :code:`ydb_ci` environment variable).
+
+Returns:
+
+- :code:`YDB_OK` if the open was successful and fills in a handle to the opened table in :code:`ret_value`; or
+- :code:`YDB_ERR_PARAMINVALID` if the output parameter :code:`ret_old_handle` is NULL or if the input parameter :code:`new_handle` points to an invalid handle (i.e. not returned by a prior :code:`ydb_ci_tab_open()/ydb_ci_tab_open_t()`) call); or
+- a negative error return code
+
+Note that application code using the :code:`ydb_cip()/ydb_cip_t()` functions provides YottaDB with a pointer to a :code:`ci_name_descriptor` structure that includes a handle. YottaDB uses the current call-in table to set the handle the first time that the associated function is called. Thereafter, the handle is immutable, and switching the call-in table leaves unchanged the mapping for functions whose handles have already been set. Use :code:`ydb_ci()/ydb_ci_t()` for application code that requires the called function to change when the call-in table changes.
+
+See the `Threads <../MultiLangProgGuide/programmingnotes.html#threads>`_ section in the Multi-Language Programmer's Guide for information on using the threaded (:code:`_t`) version of the code.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Call an M Routine from C
@@ -714,7 +690,9 @@ The ydb_ci_t() call must be in the following format:
 
 First argument: tptoken, a unique transaction processing token that refers to the active transaction.
 
-Second argument: ci_rtn_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
+Second argument: errstr as as `ydb_buffer_t <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-buffer-t>`_ structure.
+
+Third argument: ci_rtn_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
 
 ydb_ci_t() works in the same way and returns the same values as ydb_ci().
 
@@ -778,6 +756,10 @@ The ydb_cip_t() call must follow the following format:
 
 First argument: tptoken, a unique transaction processing token that refers to the active transaction.
 
+Second argument: errstr as as `ydb_buffer_t <https://docs.yottadb.com/MultiLangProgGuide/cprogram.html#ydb-buffer-t>`_ structure.
+
+Third argument: ci_rtn_name, a null-terminated C character string indicating the alias name for the corresponding <lab-ref> entry in the Call-In table.
+
 ydb_cip_t() works in the same way and returns the same values as ydb_cip().
 
 .. _call-ydb-from-c-prog:
@@ -830,7 +812,7 @@ ydb_exit() cannot be called from an external call function. YottaDB reports the 
 Building Standalone Programs
 +++++++++++++++++++++++++++++
 
-All external C functions that use call-ins should include the header file libyottadb.h that defines various types and provides signatures of call-in functions. To avoid potential size mismatches with the parameter types, YottaDB strongly recommends that gtm \*t types defined in libyottadb.h be used instead of the native types (int, float, char, etc).
+All external C functions that use call-ins should include the header file libyottadb.h that defines various types and provides signatures of call-in functions. To avoid potential size mismatches with the parameter types, YottaDB strongly recommends that ydb \*t types defined in libyottadb.h be used instead of the native types (int, float, char, etc).
 
 To use call-ins from a standalone C program, it is necessary that the YottaDB runtime library (libyottadb.so) is explicitly linked into the program. If call-ins are used from an External Call function (which in turn was called from YottaDB through the existing external call mechanism), the External Call library does not need to be linked explicitly with libyottadb.so since YottaDB would have already loaded it.
 
@@ -838,7 +820,7 @@ The following section describes compiler and linker options that must be used fo
 
 * Compiler: -I$ydb_dist
 * Linker: -L$ydb_dist -lyottadb -rpath $ydb_dist
-* YottaDB advises that the C/C++ compiler front-end be used as the Linker to avoid specifying the system startup routines on the ld command. The compile can pass linker options to ld using -W option (for example, cc -W1, -R, $ydb_dist). For more details on these options, refer to the appropriate system's manual on the respective platforms.
+* YottaDB advises that the C/C++ compiler front-end be used as the Linker to avoid specifying the system startup routines on the ld command. The compile can pass linker options to ld using -W option (for example, cc -Wl, -R, $ydb_dist). For more details on these options, refer to the appropriate system's manual on the respective platforms.
 
 ++++++++++++++++++++++++++++++
 Nested Call-Ins
