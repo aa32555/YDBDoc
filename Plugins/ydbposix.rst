@@ -185,12 +185,6 @@ realpath^%ydbposix(name,.realpath)
 
 Retrieves the canonicalized absolute pathname to the file specified by name and stores it in realpath.
 
-++++++++++++++++++++++++++++++
-regfree^%ydbposix(pregstrname)
-++++++++++++++++++++++++++++++
-
-Given the name of a variable with a compiled regular expression as a string, frees the memory and ZKILLs the variable. Note that regfree() requires a variable name to be passed in as a string. For example, after :code:`regmatch^%ydbposix("AIXHP-UXLinuxSolaris","ux","REG_ICASE",,.matches,1)`, the call to regfree to release the memory would be :code:`regfree^%ydbposix("%ydbposix(""regmatch"",""ux"",%ydbposix(""regmatch"",""REG_ICASE""))")`.
-
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 regmatch^%ydbposix(str,patt,pattflags,matchflags,.matchresults,maxresults)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -205,7 +199,7 @@ regmatch^%ydbposix(str,patt,pattflags,matchflags,.matchresults,maxresults)
 
 * The function returns results as an array, where the value of :code:`matchresults(n,"start")` provides the starting character position for the nth match, and the value of :code:`matchresults(n,"end")` provides the character position for the first character after a match; e.g. :code:`$extract(str,matchresults(2,"start"),matchresults(2,"end")-1)` returns the second matching substring.
 
-When called as a function, :code:`regmatch^%ydbposix` returns 1 on successful match and 0 if there was no match. On a successful match, the function KILLs all prior data in matchresults and otherwise leaves it unchanged. After a failed compilation, :code:`%ydbposix("regcomp","errno")` contains the error code from errlog(). When the match encounters an error (as opposed to a failure to match), :code:`%ydbposix("regexec","errno")` contains the value of errno. Local variable nodes :code:`%ydbposix("regmatch",patt,pattflags)` contain descriptors of compiled patterns and *must not be modified by your application code*. Be sure to read Memory Usage Considerations, below. Refer to :code:`man regex` for more information about regular expressions and pattern matching.
+When called as a function, :code:`regmatch^%ydbposix` returns 1 on successful match and 0 if there was no match. On a successful match, the function KILLs all prior data in matchresults and otherwise leaves it unchanged. Refer to :code:`man regex` for more information about regular expressions and pattern matching.
 
 ++++++++++++++++++++++++++
 $$regsymval^%ydbposix(sym)
@@ -438,12 +432,6 @@ $&ydbposix.regexec(pregstr,string,nmatch,.pmatch,eflags,.matchsuccess)
 
 Takes a string in string and matches it against a previously compiled regular expression whose descriptor is in pregstr with matching flags in eflags, for which numeric values can be obtained from symbolic values with :code:`$$regconst^%ydbposix()`. nmatch is the maximum number of matches to be returned and pmatch is a predefined string in which the function returns information about substrings matched. pmatch must be initialized to at least nmatch times the size of each match result which you can effect with: :code:`set $zpiece(pmatch,$zchar(0),nmatch*$$regsymval("sizeof(regmatch_t)")+1)=""` matchsuccess is 1 if the match was successful, 0 if not. The return value is 0 for both successful and failing matches; a non-zero value indicates an error. See :code:`man regex` for more information.
 
-+++++++++++++++++++++++++++
-$&ydbposix.regfree(pregstr)
-+++++++++++++++++++++++++++
-
-Takes a descriptor for a compiled regular expression, as provided by :code:`$&ydbposix.regcomp()` and frees the memory associated with the compiled regular expression. After executing :code:`$&ydbposix.regfree()`, the descriptor can be safely deleted; deleting a descriptor prior to calling this function results in a memory leak because deleting the descriptor makes the memory used for the compiled expression unrecoverable.
-
 ++++++++++++++++++++++++++++++++++++++++++++++++
 $&ydbposix.regofft2int(regofftbytes,.regofftint)
 ++++++++++++++++++++++++++++++++++++++++++++++++
@@ -543,20 +531,6 @@ $&ydbposix.utimes(file,.errno)
 Updates the access and modification timestamps of a file. See :code:`man utimes` for more information.
 
 :code:`_ydbposixtest.m` contains examples of use of the low level ydbposix interfaces.
-
-----------------------------
-The %ydbposix local variable
-----------------------------
-
-The ydbposix plugin uses the :code:`%ydbposix` local variable to store information pertaining to POSIX external calls. For example, a call to :code:`$&regsymval^%ydbposix("REG_NOTBOL")` that returns a numeric value also sets the node :code:`%ydbposix("regmatch","REG_NOTBOL")` to that value. Subsequent calls to :code:`$$regsymval^%ydbposix("REG_NOTBOL")` return the value stored in %ydbposix rather than calling out the low level function. This means that KILLs or NEWs that remove the value in :code:`%ydbposix`, result in a call to the low level function, and SETs of values may cause inappropriate results from subsequent invocations.
-
-If your application already uses :code:`%ydbposix` for another purpose, you can edit :code:`_ydbposix.m` and replace all occurrences of %ydbposix with another available local variable name.
-
----------------------------
-Memory Usage Considerations
----------------------------
-
-When :code:`$&ydbposix.regcomp()` is called to compile a regular expression, it allocates needed memory, and returns a descriptor to the compiled code. Until a subsequent call to :code:`$&ydbposix.regfree()` with that descriptor, the memory is retained. The high level :code:`regmatch^%ydbposix()` entryref stores descriptors in :code:`%ydbposix("regmatch",...)` nodes. If an application deletes or modifies these nodes prior to calling :code:`$&ydbposix.regfree()` to release compiled regular expressions, that memory cannot be released during the life of the process. If your application uses scope management (using KILL and/or NEW) that adversely interacts with this, you should consider modifying _ydbposix.m to free the cached compiled regular expression immediately after the call to :code:`$&ydbposix.regexec()`, or to store the descriptors in a global variable specific to the process, rather than in a local variable.
 
 --------------
 Error Handling
