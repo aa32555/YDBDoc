@@ -288,6 +288,18 @@ The format of the REPLINSTANCE qualifier is:
 
    -REPLIN[STANCE]=<target_location>
 
+^^^^^
+RETry
+^^^^^
+
+Specifies the number of times that MUPIP BACKUP should retry the backup if it fails. If RETRY is not specified, MUPIP BACKUP retries the file copy operation once if the first attempt fails on a retriable reason. In case of an error, retry attempts are always based on ``cp`` or ``pax`` even when another copy mechanism is available. if ``--retry=0`` is specified, MUPIP BACKUP makes no attempt to retry when it encounters a failure.
+
+The format of the RETRY qualifier is:
+
+.. code-block:: none
+
+   --ret[ry]=<count>
+
 ^^^^^^^
 -Since
 ^^^^^^^
